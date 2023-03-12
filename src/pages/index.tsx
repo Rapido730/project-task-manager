@@ -1,5 +1,4 @@
 import { Inter } from "next/font/google";
-// import "../styles/globals.css"
 const inter = Inter({ subsets: ["latin"] });
 import { User_Type } from "@/DB/models/User.Model";
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ import Create_Action from "@/Store/Action_Creator";
 import { User_Action_Type } from "@/Store/User/User.Types";
 import { GetServerSideProps } from "next";
 import axios from "axios";
+import Manager_Body from "@/component/manager_body.component";
 interface Props {
   User: User_Type | undefined;
 }
@@ -43,11 +43,13 @@ function Home({ User }: Props) {
   };
 
   return (
-    <div className="tw-text-white tw-bg-gray-900">
+    <div className="">
       <div>
         <Header />
       </div>
-      <div></div>
+      <div>
+        <Manager_Body />
+      </div>
       <div></div>
     </div>
   );

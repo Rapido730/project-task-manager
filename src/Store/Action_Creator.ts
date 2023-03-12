@@ -1,7 +1,6 @@
-import { Project_Type } from "DB/models/Project.Model";
-import { Email_Template_Type } from "DB/models/Template.Model";
-import { Template_Category_Type } from "DB/models/Category.Model";
-import { User_Type } from "DB/models/User.Model";
+import { Project_Type } from "@/DB/models/Project.Model";
+import { Task_Type } from "@/DB/models/Task.Model";
+import { User_Type } from "@/DB/models/User.Model";
 
 export interface Action_Type {
   type: String;
@@ -9,10 +8,8 @@ export interface Action_Type {
     | undefined
     | Project_Type
     | Project_Type[]
-    | Template_Category_Type
-    | Template_Category_Type[]
-    | Email_Template_Type
-    | Email_Template_Type[]
+    | Task_Type
+    | Task_Type[]
     | null;
 }
 
@@ -20,10 +17,8 @@ export type Payload =
   | undefined
   | Project_Type
   | Project_Type[]
-  | Template_Category_Type
-  | Template_Category_Type[]
-  | Email_Template_Type
-  | Email_Template_Type[]
+  | Task_Type
+  | Task_Type[]
   | User_Type
   | null;
 

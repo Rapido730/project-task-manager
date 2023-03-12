@@ -1,7 +1,7 @@
 import { User_Action_Type } from "./User.Types";
 
 // import { Template_User_Type } from "DB/models/template_Categories.model";
-import { User_Type } from "DB/models/User.Model";
+import { User_Type } from "@/DB/models/User.Model";
 import { Action_Type } from "../Action_Creator";
 
 export interface User_State_Type {

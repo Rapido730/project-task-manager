@@ -1,4 +1,4 @@
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import React, { Fragment } from "react";
 import {
   Container,
@@ -16,6 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProfileIcon from "../assests/ProfileLogo.png";
 
 import Router, { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { State_Type } from "@/Store/Root_Reducer";
+import { Select_Current_User } from "@/Store/User/User.Selector";
 
 const Header = () => {
   const { data } = useSession();
@@ -26,6 +29,12 @@ const Header = () => {
     });
   };
 
+  const signOutHandler = (event: any) => {
+    signOut();
+  };
+  const Current_User = useSelector((state: State_Type) =>
+    Select_Current_User(state)
+  );
   const { pathname } = useRouter();
 
   return (
@@ -70,12 +79,17 @@ const Header = () => {
                       </span>
                     }
                     id="collasible-nav-dropdown"
-                    className=" "
+                    className=" tw-flex tw-flex-col "
                   >
+                    <NavDropdown.ItemText className="tw-bg-inherit tw-text-center">
+                      <h1 className="tw-text-sm">
+                        Role : {Current_User?.role}
+                      </h1>
+                    </NavDropdown.ItemText>
                     <NavDropdown.Item className="tw-bg-inherit">
                       <Button
                         className="w-100 tw-font-bold hover:tw-text-white tw-text-white hover:tw-bg-cyan-200 tw-bg-cyan-400 tw-mx-1 tw-p-2"
-                        // onClick={signOutHandler}
+                        onClick={signOutHandler}
                       >
                         Sign Out
                       </Button>

@@ -8,7 +8,7 @@ export default async function create(
 ) {
   try {
     connectMongoose();
-    // console.log("yes");
+    console.log("yes");
     const data = req.body;
     const current_Project = await Project.findOne({ _id: data._id });
     await current_Project.populate({

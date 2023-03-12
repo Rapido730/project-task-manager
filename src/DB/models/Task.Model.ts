@@ -19,9 +19,9 @@ const Task_Schema = new Schema({
     trim: true,
   },
   status: {
-    type: Task_Status,
+    type: String,
     required: true,
-    default: Task_Status.ToDo,
+    default: "ToDo",
   },
   manager_Id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -49,15 +49,14 @@ const Task_Schema = new Schema({
 });
 
 export type Task_Type = {
-  body: string;
   name: string;
-  subject: string;
-  created_At?: Date;
-  updated_At?: Date;
-  author_Id: Types.ObjectId;
+  description: string;
+  status: string;
+  manager_Id: Types.ObjectId;
   project_Id: Types.ObjectId;
-  category_Id: Types.ObjectId;
-  _id?: Types.ObjectId | undefined;
+  worker_Id: Types.ObjectId;
+  created_At: Date;
+  updated_At: Date;
 };
 
 export const Task = models.Task || model("Task", Task_Schema);

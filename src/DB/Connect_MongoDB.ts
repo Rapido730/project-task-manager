@@ -1,6 +1,6 @@
-require("./models/Category.Model");
+require("./models/User.Model");
+require("./models/Task.Model")
 require("./models/Project.Model");
-require("./models/Template.Model");
 require("./models/User.Model");
 import { set, connect } from "mongoose";
 

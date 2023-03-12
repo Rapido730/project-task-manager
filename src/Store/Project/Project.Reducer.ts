@@ -1,6 +1,6 @@
 import { Project_Action_Type } from "./Project.Types";
 
-import { Project_Type } from "DB/models/Project.Model";
+import { Project_Type } from "@/DB/models/Project.Model";
 import { Action_Type } from "../Action_Creator";
 
 export interface Project_State_Type {
@@ -20,7 +20,7 @@ export const Project_Reducer = (State = INITIAL_STATE, Action: any) => {
     case Project_Action_Type.Set_Project_Data:
       const New_State = {
         ...State,
-        Selected_Project: payload.length > 0 ? payload[0] : null,
+
         Project_Data: payload,
       };
       return New_State;
@@ -33,15 +33,12 @@ export const Project_Reducer = (State = INITIAL_STATE, Action: any) => {
         (project) => project._id !== payload._id
       );
       if (State.Selected_Project?._id === payload._id) {
-        State.Selected_Project = New_Data.length ? New_Data[0] : null;
+        State.Selected_Project = null;
       }
 
       return { ...State, Project_Data: New_Data };
     case Project_Action_Type.Add_Project:
       const New_State_Data = State.Project_Data;
-      if (State.Selected_Project === null) {
-        State.Selected_Project = payload;
-      }
       New_State_Data.push(payload);
 
       return { ...State, Project_Data: New_State_Data };
