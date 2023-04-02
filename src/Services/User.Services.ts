@@ -54,7 +54,7 @@ export const Create_User = async (data: User_Type) => {
   }
 };
 
-export const Read_User_By_ID = async (User_Id: Types.ObjectId) => {
+export const Read_User_By_ID = async (User_Id: string) => {
   try {
     const response = await axios.post(
       "/api/database.api/user.api/read_user_by_id.api",

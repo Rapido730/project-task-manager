@@ -17,7 +17,7 @@ const Task_Schema = new Schema({
     default: "ToDo",
   },
   manager_Id: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
     ref: "User",
   },
@@ -27,7 +27,7 @@ const Task_Schema = new Schema({
     ref: "Project",
   },
   worker_Id: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
     ref: "User",
   },
@@ -46,9 +46,9 @@ export type Task_Type = {
   name: string;
   description: string;
   status: string;
-  manager_Id: Types.ObjectId;
+  manager_Id: string;
   project_Id: Types.ObjectId;
-  worker_Id: Types.ObjectId;
+  worker_Id: string;
   created_At: Date;
   updated_At: Date;
 };

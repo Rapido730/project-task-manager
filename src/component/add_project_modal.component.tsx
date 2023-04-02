@@ -32,7 +32,7 @@ const Add_Project_Modal_Form = ({
   const Current_User = useSelector((State: State_Type) =>
     Select_Current_User(State)
   );
-
+  const { Selected_User } = useSelector((State: State_Type) => State.User);
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
 
@@ -63,12 +63,12 @@ const Add_Project_Modal_Form = ({
     event: React.ChangeEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    if (Current_User && Current_User._id) {
+    if (Current_User && Selected_User) {
       try {
         const data: Project_Type = {
           name: Project_Field.name,
           description: Project_Field.description,
-          manager_Id: Current_User._id,
+          manager_Id: Selected_User.email,
         };
         const res = Project_Data.reduce((res, project) => {
           if (project.name === data.name) {

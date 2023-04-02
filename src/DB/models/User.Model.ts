@@ -14,7 +14,7 @@ const User_Schema = new Schema({
   role: {
     type: String,
     required: true,
-    default: "employee",
+    default: "developer",
   },
   created_At: {
     type: Date,
@@ -28,13 +28,13 @@ const User_Schema = new Schema({
 
 User_Schema.virtual("projects", {
   ref: "Project",
-  localField: "_id",
+  localField: "email",
   foreignField: "manager_Id",
 });
 
 User_Schema.virtual("tasks", {
   ref: "Task",
-  localField: "_id",
+  localField: "email",
   foreignField: "worker_Id",
 });
 

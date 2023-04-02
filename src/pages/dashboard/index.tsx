@@ -81,28 +81,3 @@ function Home() {
 }
 
 export default Home;
-
-// export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-//   let User = null;
-//   try {
-//     const data = await getSession(context);
-//     console.log(data);
-//     const response = await axios.post(
-//       "http://localhost:3000/api/database.api/user.api/create_user.api",
-//       {
-//         email: data?.user?.email,
-//         name: data?.user?.name,
-//       }
-//     );
-//     User = response.data.user;
-//   } catch {
-//     User = null;
-//   }
-
-//   console.log({ User });
-//   return {
-//     props: {
-//       User: User,
-//     },
-//   };
-// };

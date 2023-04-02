@@ -41,7 +41,7 @@ export const Update_Task = async (Data: Task_Type) => {
 export const Create_Task = async (Data: {
   name: string;
   description: string;
-  manager_Id: Types.ObjectId;
+  manager_Id: string;
   project_Id: Types.ObjectId;
   worker_Id: string;
 }) => {

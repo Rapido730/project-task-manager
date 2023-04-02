@@ -43,7 +43,11 @@ const Add_Task_Modal_Form = ({
     Heading: String;
     Body: String;
   }>({ Heading: "", Body: "" });
-  const [Form_Notification, Set_Form_Notification] = useState({
+  const [Name_Error_Notification, Set_Name_Error_Notification] = useState({
+    IsOpen: false,
+    text: "",
+  });
+  const [Worker_Error_Notification, Set_Worker_Error_Notification] = useState({
     IsOpen: false,
     text: "",
   });
@@ -88,10 +92,16 @@ const Add_Task_Modal_Form = ({
         }, false);
 
         if (res) {
-          Set_Form_Notification({
+          Set_Name_Error_Notification({
             IsOpen: true,
             text: "Task name already exists!",
           });
+          setTimeout(() => {
+            Set_Name_Error_Notification({
+              IsOpen: false,
+              text: "",
+            });
+          }, 3000);
           return;
         }
 
@@ -120,16 +130,30 @@ const Add_Task_Modal_Form = ({
           });
           Set_Notification_Toast_Show(true);
         } else if (Status === "Worker not found!") {
-          Set_Notification_Data({
-            Heading: "employee not found!",
-            Body: "Please enter correct Id.",
+          Set_Worker_Error_Notification({
+            IsOpen: true,
+            text: "developer name doesn't exists!",
           });
+          setTimeout(() => {
+            Set_Worker_Error_Notification({
+              IsOpen: false,
+              text: "",
+            });
+          }, 3000);
+          return;
         } else {
-          Set_Notification_Data({
-            Heading: "employee not found!",
-            Body: "Please enter correct Id.",
+          Set_Worker_Error_Notification({
+            IsOpen: true,
+            text: "developer name doesn't exists!",
           });
-          Set_Notification_Toast_Show(true);
+          setTimeout(() => {
+            Set_Worker_Error_Notification({
+              IsOpen: false,
+              text: "",
+            });
+          }, 3000);
+
+          return;
         }
       } catch (err) {
         Set_Notification_Data({
@@ -164,10 +188,10 @@ const Add_Task_Modal_Form = ({
                 name="name"
                 onChange={ProjectFieldChangeHandler}
               />
-              {Form_Notification.IsOpen && (
+              {Name_Error_Notification.IsOpen && (
                 <Form.Text className="text-muted">
                   <span className="tw-mx-4 tw-text-red-500">
-                    {Form_Notification.text}
+                    {Name_Error_Notification.text}
                   </span>
                 </Form.Text>
               )}
@@ -193,14 +217,24 @@ const Add_Task_Modal_Form = ({
                   name="assigned_to"
                   onChange={ProjectFieldChangeHandler}
                 />
-                <Form.Text className="text-muted"></Form.Text>
+
+                {Worker_Error_Notification.IsOpen && (
+                  <Form.Text className="text-muted">
+                    <span className="tw-mx-4 tw-text-red-500">
+                      {Worker_Error_Notification.text}
+                    </span>
+                  </Form.Text>
+                )}
               </Form.Group>
             )}
             <div className="d-flex gap-3">
               <Button variant="dark" type="submit">
                 Add
               </Button>
-              <p className="my-auto tw-cursor-pointer" onClick={() => setModalFormVisible(false)}>
+              <p
+                className="my-auto tw-cursor-pointer"
+                onClick={() => setModalFormVisible(false)}
+              >
                 Cancel
               </p>
             </div>

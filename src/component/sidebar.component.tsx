@@ -56,14 +56,6 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
 
   const { Selected_Task } = useSelector((State: State_Type) => State.Task);
 
-  useEffect(() => {
-    if (Selected_Task) {
-      Read_User_By_ID(Selected_Task?.worker_Id).then((res) => {
-        const { Response_Data, Status } = res;
-        Set_Assigned_To(Response_Data);
-      });
-    }
-  }, [Selected_Task]);
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
 
@@ -209,7 +201,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
               {"Assigned To "}
             </h1>
             <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
-              {Assigned_to}
+              {Selected_Task?.worker_Id}
             </h1>
           </div>
           <div className="tw-flex tw-items-center  tw-shadow-inner">

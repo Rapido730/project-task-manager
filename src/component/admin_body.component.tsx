@@ -113,7 +113,7 @@ const Admin_Body = () => {
   useEffect(() => {
     if (Selected_User) {
       const filteredProject = Project_Data.filter(
-        (project) => project.manager_Id === Selected_User?._id
+        (project) => project.manager_Id === Selected_User.email
       );
       SetProjects(filteredProject);
     } else {
@@ -349,18 +349,3 @@ const Admin_Body = () => {
 };
 
 export default Admin_Body;
-
-//  <div className="tw-grid tw-grid-cols-3 tw-gap-12 mx-auto">
-//    {Project_Data.map((project) => (
-//      <div>
-//        <Card style={{ width: "18rem" }}>
-//          {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-//          <Card.Body>
-//            <Card.Title>{project.name}</Card.Title>
-//            <Card.Text>{"get there"}</Card.Text>
-//            <Button variant="primary">Go somewhere</Button>
-//          </Card.Body>
-//        </Card>
-//      </div>
-//    ))}
-//  </div>;

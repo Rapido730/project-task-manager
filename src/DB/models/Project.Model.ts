@@ -12,7 +12,7 @@ const ProjectSchema = new Schema({
     trim: true,
   },
   manager_Id: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
     ref: "User",
   },
@@ -37,7 +37,7 @@ export type Project_Type = {
   description: string;
   created_At?: Date;
   updated_At?: Date;
-  manager_Id: Types.ObjectId;
+  manager_Id: string;
   _id?: Types.ObjectId | undefined;
 };
 

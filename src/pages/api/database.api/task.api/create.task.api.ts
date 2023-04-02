@@ -14,7 +14,7 @@ export default async function create(
 
     const Worker = await User.findOne({ email: data.worker_Id });
 
-    if (!Worker) {
+    if (!Worker || Worker.role !== "developer") {
       res.status(406).send({ error: "worker not found" });
       return;
     }
@@ -24,7 +24,7 @@ export default async function create(
       description: data.description,
       manager_Id: data.manager_Id,
       project_Id: data.project_Id,
-      worker_Id: Worker._id,
+      worker_Id: Worker.email,
     });
 
     const tasks = await Task.find({

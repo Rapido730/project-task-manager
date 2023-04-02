@@ -123,7 +123,9 @@ const Header = () => {
                           {data.user?.name}
                         </h1>
                         <span> {data.user?.email}</span>
-
+                        <div className="tw-flex">
+                          <span> {Current_User?.role.toLocaleUpperCase()}</span>
+                        </div>
                         {/* <button
                           // variant="flat"
                           className=" tw-font-bold tw-mx-1 tw-p-2 tw-rounded-md tw-bg-gray-900 tw-text-white hover:tw-bg-gray-700"

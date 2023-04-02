@@ -54,7 +54,7 @@ const Developer_Body = () => {
             Create_Action(
               Task_Action_Type.Set_Task_Data,
               Response_Data.filter(
-                (task: Task_Type) => task.worker_Id === Selected_User._id
+                (task: Task_Type) => task.worker_Id === Selected_User.email
               )
             )
           );
@@ -138,7 +138,7 @@ const Developer_Body = () => {
   return (
     <Fragment>
       <div className="tw-flex tw-flex-col tw-h-full">
-        {Project_Data.length ? (
+        {Project_Data.length || Current_User?.role === "admin" ? (
           <div className="tw-flex tw-h-full">
             {Current_User?.role === "developer" && (
               <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
