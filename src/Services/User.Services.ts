@@ -2,6 +2,7 @@ import axios from "axios";
 import { User_Type, User } from "@/DB/models/User.Model";
 
 import { Session } from "next-auth";
+import { Types } from "mongoose";
 
 export const Get_User_Document = async (data: Session) => {
   const response = await axios.post(
@@ -45,6 +46,24 @@ export const Create_User = async (data: User_Type) => {
     );
     if (response.status === 201) {
       return { Status: "Success", Response_Data: response.data.Project };
+    } else {
+      return { Status: "Database_Error", Response_Data: response };
+    }
+  } catch {
+    return { Status: "Server_Error", Response_Data: {} };
+  }
+};
+
+export const Read_User_By_ID = async (User_Id: Types.ObjectId) => {
+  try {
+    const response = await axios.post(
+      "/api/database.api/user.api/read_user_by_id.api",
+      {
+        User_Id,
+      }
+    );
+    if (response.status === 200) {
+      return { Status: "Success", Response_Data: response.data.User.email };
     } else {
       return { Status: "Database_Error", Response_Data: response };
     }

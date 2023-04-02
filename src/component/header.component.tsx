@@ -145,7 +145,7 @@ const Header = () => {
                 </Nav>
               ) : (
                 <Nav>
-                  <Button variant="flat" className="" onClick={signinHandler}>
+                  <Button variant="dark" className="" onClick={signinHandler}>
                     Sign In
                   </Button>
                 </Nav>

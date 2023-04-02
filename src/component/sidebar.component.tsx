@@ -27,6 +27,7 @@ import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import { Task_Action_Type } from "@/Store/Task/Task.Types";
 import { Update_Task } from "@/Services/Task.Services";
 import { Task_Status } from "./project_preview.component";
+import { Read_User_By_ID } from "@/Services/User.Services";
 
 interface Props {
   setModalFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -49,11 +50,20 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
   const [Form_Field, set_Form_Field] = useState<Form_Type>(INITIAL_FORM_VALUE);
 
   const [Body, Set_Body] = useState("");
+  const [Assigned_to, Set_Assigned_To] = useState("");
 
   const subjectRef = useRef();
 
   const { Selected_Task } = useSelector((State: State_Type) => State.Task);
 
+  useEffect(() => {
+    if (Selected_Task) {
+      Read_User_By_ID(Selected_Task?.worker_Id).then((res) => {
+        const { Response_Data, Status } = res;
+        Set_Assigned_To(Response_Data);
+      });
+    }
+  }, [Selected_Task]);
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
 
@@ -94,110 +104,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
     set_Form_Field({ ...Form_Field, [name]: value });
   };
 
-  const Select_Predefined_template = (template: {
-    name: string;
-    subject: string;
-    body: string;
-  }) => {
-    set_Form_Field({
-      ...Form_Field,
-      subject: template.subject,
-    });
-    Set_Body(template.body);
-  };
-  console.log({ Form_Field });
-
-  //   const FormSubmitHandler = async (
-  //     event: React.ChangeEvent<HTMLFormElement>
-  //   ) => {
-  //     event.preventDefault();
-  //     if (Selected_Template) {
-  //       try {
-  //         const data: Email_Template_Type = {
-  //           name: Form_Field.name,
-  //           body: Body,
-  //           subject: Form_Field.subject,
-  //           _id: Selected_Template._id,
-  //           author_Id: Selected_Template.author_Id,
-  //           project_Id: Selected_Template.project_Id,
-  //           category_Id: Selected_Template.category_Id,
-  //         };
-  //         const { Status, Response_Data } = await Update_Template(data);
-  //         console.log({ Status, Response_Data });
-  //         if (Status === "Success") {
-  //           Dispatch(
-  //             Create_Action(Template_Action_Type.Update_Template, Response_Data)
-  //           );
-
-  //           setModalFormVisible(false);
-  //         } else if (Status == "Database_Error") {
-  //           Set_Notification_Data({
-  //             Heading: "Error while updating data",
-  //             Body: "Template data is not updated try again!",
-  //           });
-  //           Set_Notification_Toast_Show(true);
-  //         } else {
-  //           console.log("Aaya");
-  //           Set_Notification_Data({
-  //             Heading: "Error in network",
-  //             Body: " try again!",
-  //           });
-  //           Set_Notification_Toast_Show(true);
-  //         }
-  //       } catch (err) {}
-  //     } else if (Selected_Category && Selected_Category._id) {
-  //       try {
-  //         const data: Email_Template_Type = {
-  //           name: Form_Field.name,
-  //           body: Body,
-  //           subject: Form_Field.subject,
-  //           author_Id: Selected_Category.author_Id,
-  //           project_Id: Selected_Category.project_Id,
-  //           category_Id: Selected_Category._id,
-  //         };
-  //         const { Status, Response_Data } = await Create_Template(data);
-  //         console.log({ Status, Response_Data });
-  //         if (Status === "Success") {
-  //           Dispatch(
-  //             Create_Action(Template_Action_Type.Add_Template, Response_Data)
-  //           );
-
-  //           setModalFormVisible(false);
-  //         } else if (Status == "Database_Error") {
-  //           Set_Notification_Data({
-  //             Heading: "Error while creating data",
-  //             Body: "Template data is not created try again!",
-  //           });
-  //           Set_Notification_Toast_Show(true);
-  //         } else {
-  //           Set_Notification_Data({
-  //             Heading: "Error in network",
-  //             Body: " try again!",
-  //           });
-  //           Set_Notification_Toast_Show(true);
-  //         }
-  //       } catch (err) {
-  //         Set_Notification_Data({
-  //           Heading: "Error in app",
-  //           Body: " try again!",
-  //         });
-  //         Set_Notification_Toast_Show(true);
-  //       }
-  //     }
-  //   };
-
   const [selectedInputBox, SetSelectInputBox] = useState<string>("subject");
-
-  const onSelectHandler = (event: any, name: string) => {
-    console.log(name);
-    SetSelectInputBox(name);
-  };
-
-  const ChangeBodyHandler = (content: string) => {
-    Set_Body(content);
-    console.log(content);
-    // Set_Body(content);
-  };
 
   // console.log(Form_Field.body);
 
@@ -226,35 +133,6 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
         Set_Notification_Toast_Show(true);
       }
     }
-  };
-
-  const InsertTemplateHandler = (
-    event: React.MouseEvent<HTMLElement, MouseEvent>,
-    text: string
-  ) => {
-    event.preventDefault();
-    if (selectedInputBox === "body") {
-      // console.log(Form_Field["body"]);
-      console.log("text");
-      let new_value = Body;
-
-      if (new_value === "<p><br></p>") {
-        new_value = text;
-      } else {
-        new_value =
-          new_value.slice(0, new_value.length - 4) +
-          text +
-          new_value.slice(new_value.length - 4);
-      }
-      console.log(new_value);
-      // set_Form_Field({ ...Form_Field, [selectedInputBox]: new_value });
-      Set_Body(new_value);
-    } else {
-      const new_value = Form_Field["subject"] + text;
-      set_Form_Field({ ...Form_Field, [selectedInputBox]: new_value });
-    }
-
-    console.log({ Form_Field });
   };
 
   const [Current_Theme, Set_Theme] = useState("Light");
@@ -294,6 +172,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
             <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
               <DropdownButton
                 id="dropdown-basic-button"
+                variant="dark"
                 title={<span>{Selected_Task?.status}</span>}
               >
                 <Dropdown.Item
@@ -327,6 +206,14 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
           </div>
           <div className="tw-flex tw-items-center  tw-shadow-inner">
             <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
+              {"Assigned To "}
+            </h1>
+            <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
+              {Assigned_to}
+            </h1>
+          </div>
+          <div className="tw-flex tw-items-center  tw-shadow-inner">
+            <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
               {"Description "}
             </h1>
             <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
@@ -335,19 +222,21 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
           </div>
           <div className="tw-flex tw-items-center  tw-shadow-inner">
             <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
-              {"Created At "}
+              {"Created On "}
             </h1>
-            {/* <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
-              {Selected_Task?.created_At}
-            </h1> */}
+            <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
+              {Selected_Task &&
+                Selected_Task.created_At.toString().slice(0, 10)}
+            </h1>
           </div>
           <div className="tw-flex tw-items-center  tw-shadow-inner">
             <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
-              {"Modified At "}
+              {"Modified On "}
             </h1>
-            {/* <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
-              {Selected_Task?.updated_At}
-            </h1> */}
+            <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
+              {Selected_Task &&
+                Selected_Task.updated_At.toString().slice(0, 10)}
+            </h1>
           </div>
         </div>
       </div>

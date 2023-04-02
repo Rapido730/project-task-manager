@@ -10,10 +10,12 @@ import {
   Dropdown,
   Offcanvas,
 } from "react-bootstrap";
+
+import { Delete_Project } from "@/Services/Project.Services";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Image from "next/image";
-import DeleteIcon from "../assests/deleteLogo.png";
+import DeleteIcon from "../assests/Delete.svg";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,6 +31,7 @@ import { User_Type } from "@/DB/models/User.Model";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import Developer_Tasks from "./developer_task.component";
 import Developer_Body from "./developer_body.component";
+import { Update_User } from "@/Services/User.Services";
 
 const Admin_Body = () => {
   // console.log({ body: selectedProject });
@@ -99,7 +102,14 @@ const Admin_Body = () => {
     get_All_Users();
     get_All_Projects();
   }, []);
-
+  const DeleteProjectHandler = async (
+    event: React.MouseEvent<HTMLImageElement, MouseEvent>,
+    project: Project_Type
+  ) => {
+    event.preventDefault();
+    await Delete_Project(project);
+    Dispatch(Create_Action(Project_Action_Type.Delete_Project, project));
+  };
   useEffect(() => {
     if (Selected_User) {
       const filteredProject = Project_Data.filter(
@@ -110,6 +120,24 @@ const Admin_Body = () => {
       SetProjects(Project_Data);
     }
   }, [Project_Data, Selected_User]);
+
+  const OnRoleUpdate = async (
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
+    role: string
+  ) => {
+    console.log("aaya2");
+    event.preventDefault();
+    if (Selected_User) {
+      Dispatch(
+        Create_Action(User_Action_Type.Update_User, {
+          ...Selected_User,
+          role: role,
+        })
+      );
+
+      await Update_User({ ...Selected_User, role: role });
+    }
+  };
 
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 
@@ -210,14 +238,15 @@ const Admin_Body = () => {
             </Accordion>
           </div>
         </div>
-        <div>
+        <div className="tw-flex">
           {Selected_Project ? (
             <Project_Preview />
           ) : Selected_User?.role !== "developer" ? (
-            <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-3 tw-gap-8">
+            <div className="tw-grid tw-shadow-inner tw-mx-auto tw-ml-12 tw-p-5 tw-grid-cols-3 tw-gap-12">
               {Selected_User && (
                 <Button
                   variant="dark"
+                  style={{ width: "18rem", height: "14rem" }}
                   onClick={() => SetShowUserCanvas(true)}
                   className="me-2"
                 >
@@ -227,11 +256,27 @@ const Admin_Body = () => {
               {Projects &&
                 Projects.map((project) => (
                   <Card
-                    style={{ width: "18rem" }}
+                    style={{ width: "18rem", height: "14rem" }}
                     key={project.name}
                     className="text-center tw-shadow-lg"
                   >
-                    <Card.Header>{project.name}</Card.Header>
+                    <Card.Header>
+                      <div className="tw-flex tw-justify-center">
+                        <h1 className="tw-text-xl tw-font-bold">
+                          {project.name}
+                        </h1>
+                        <Image
+                          className="ms-auto growable tw-cursor-pointer"
+                          src={DeleteIcon}
+                          alt="img"
+                          height={25}
+                          onClick={(event) =>
+                            DeleteProjectHandler(event, project)
+                          }
+                          width={25}
+                        />
+                      </div>
+                    </Card.Header>
                     <Card.Body>
                       {/* <Card.Title>{project.name}</Card.Title> */}
                       <Card.Text>{project.description}</Card.Text>
@@ -272,14 +317,26 @@ const Admin_Body = () => {
             <Offcanvas.Body>
               <div className="tw-flex tw-items-center">
                 <h1 className="tw-text-2xl tw-p-2">Role</h1>
+                <h1 className="tw-text-2xl tw-p-2">{Selected_User?.role}</h1>
                 <Dropdown>
-                  <Dropdown.Toggle variant="flat" id="dropdown-basic">
+                  <Dropdown.Toggle variant="dark" id="dropdown-basic">
                     <span className="tw-text-xl">{Selected_User?.role}</span>
                   </Dropdown.Toggle>
-
                   <Dropdown.Menu>
-                    <Dropdown.Item>Manager</Dropdown.Item>
-                    <Dropdown.Item>Developer</Dropdown.Item>
+                    {Selected_User?.role === "developer" && (
+                      <Dropdown.Item
+                        onClick={(event) => OnRoleUpdate(event, "manager")}
+                      >
+                        Manager
+                      </Dropdown.Item>
+                    )}
+                    {Selected_User?.role === "manager" && (
+                      <Dropdown.Item
+                        onClick={(event) => OnRoleUpdate(event, "developer")}
+                      >
+                        Developer
+                      </Dropdown.Item>
+                    )}
                   </Dropdown.Menu>
                 </Dropdown>
               </div>

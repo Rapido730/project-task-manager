@@ -162,7 +162,7 @@ const Developer_Tasks = () => {
     <Fragment>
       <div className="tw-flex tw-flex-col tw-w-full">
         <div className="tw-self-end tw-mb-4">
-          <Button onClick={() => SetModalFormVisible(true)}>Create Task</Button>
+          <Button variant="dark" onClick={() => SetModalFormVisible(true)}>Create Task</Button>
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <div className=" tw-grid tw-grid-cols-4 tw-gap-8 tw-mx-10">
@@ -200,7 +200,7 @@ const Developer_Tasks = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }
@@ -258,7 +258,7 @@ const Developer_Tasks = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }
@@ -313,7 +313,7 @@ const Developer_Tasks = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }
@@ -368,7 +368,7 @@ const Developer_Tasks = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }

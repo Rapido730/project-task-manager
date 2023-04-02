@@ -17,6 +17,8 @@ import Developer_Tasks from "./developer_task.component";
 import { Select_All_Project } from "@/Store/Task/Task.Selector";
 import { Types } from "mongoose";
 import { Task_Type } from "@/DB/models/Task.Model";
+import { User_Action_Type } from "@/Store/User/User.Types";
+import { Update_User } from "@/Services/User.Services";
 
 const Developer_Body = () => {
   const Dispatch = useDispatch();
@@ -98,6 +100,23 @@ const Developer_Body = () => {
     }
   };
 
+  const OnRoleUpdate = async (
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
+    role: string
+  ) => {
+    console.log("aaya2");
+    event.preventDefault();
+    if (Selected_User) {
+      Dispatch(
+        Create_Action(User_Action_Type.Update_User, {
+          ...Selected_User,
+          role: role,
+        })
+      );
+
+      await Update_User({ ...Selected_User, role: role });
+    }
+  };
   const SelectProjectHandler = (
     event:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -155,6 +174,7 @@ const Developer_Body = () => {
                 {Current_User?.role === "admin" && (
                   <Button
                     variant="dark"
+                    style={{ width: "18rem", height: "14rem" }}
                     onClick={() => SetShowUserCanvas(true)}
                     className="me-2"
                   >
@@ -225,21 +245,59 @@ const Developer_Body = () => {
             onHide={() => SetShowUserCanvas(false)}
           >
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title>{Selected_User?.name}</Offcanvas.Title>
+              <Offcanvas.Title>Profile</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <div className="tw-flex tw-items-center">
-                <h1 className="tw-text-2xl tw-p-2">Role</h1>
-                <Dropdown>
-                  <Dropdown.Toggle variant="flat" id="dropdown-basic">
-                    <span className="tw-text-xl">{Selected_User?.role}</span>
-                  </Dropdown.Toggle>
+              <div className="tw-flex tw-flex-col ">
+                <div className="tw-flex">
+                  <h1 className="tw-text-xl tw-p-1 hover:tw-bg-gray-300">
+                    Name :{" "}
+                  </h1>
+                  <h1 className="tw-text-xl tw-p-1 hover:tw-bg-gray-300">
+                    {Selected_User?.name}{" "}
+                  </h1>
+                </div>
+                <div className="tw-flex">
+                  <h1 className="tw-text-xl tw-p-1 hover:tw-bg-gray-300">
+                    Email :
+                  </h1>
+                  <h1 className="tw-text-xl tw-p-1 hover:tw-bg-gray-300">
+                    {Selected_User?.email}{" "}
+                  </h1>
+                </div>
+                <div className="tw-flex">
+                  <h1 className="tw-text-xl tw-p-1 hover:tw-bg-gray-300">
+                    Role :
+                  </h1>
+                  <h1 className="tw-text-xl tw-p-1 hover:tw-bg-gray-300">
+                    <Dropdown>
+                      <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                        <span className="tw-text-xl">
+                          {Selected_User?.role}
+                        </span>
+                      </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item>Manager</Dropdown.Item>
-                    <Dropdown.Item>Developer</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                      <Dropdown.Menu>
+                        {Selected_User?.role === "developer" && (
+                          <Dropdown.Item
+                            onClick={(event) => OnRoleUpdate(event, "manager")}
+                          >
+                            Manager
+                          </Dropdown.Item>
+                        )}
+                        {Selected_User?.role === "manager" && (
+                          <Dropdown.Item
+                            onClick={(event) =>
+                              OnRoleUpdate(event, "developer")
+                            }
+                          >
+                            Developer
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </h1>
+                </div>
               </div>
             </Offcanvas.Body>
           </Offcanvas>
