@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 
 export const Get_User_Document = async (data: Session) => {
   const response = await axios.post(
-    "http://localhost:3000/api/database.api/user.api/create_user.api",
+    "/api/database.api/user.api/create_user.api",
     {
       email: data?.user?.email,
       name: data?.user?.name,

@@ -10,6 +10,9 @@ import {
   DropdownButton,
   NavDropdown,
 } from "react-bootstrap";
+import DropdownToggle from "react-bootstrap/esm/DropdownToggle";
+import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
+import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import Image from "next/image";
 import { faListAlt } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -38,6 +41,8 @@ const Header = () => {
     Select_Current_User(state)
   );
   const { pathname } = useRouter();
+
+  const Current_Theme = "Dark";
 
   return (
     <Fragment>
@@ -74,8 +79,8 @@ const Header = () => {
 
               {data ? (
                 <Nav className=" tw-w-max ">
-                  <NavDropdown
-                    title={
+                  <Dropdown drop="start">
+                    <DropdownToggle variant="flat">
                       <span className="tw-space-x-2">
                         <Image
                           src={data?.user?.image || ProfileIcon}
@@ -85,38 +90,58 @@ const Header = () => {
                           className="rounded-circle"
                           quality={100}
                         />
-                        <span>{data.user?.name}</span>
+                        <span className="tw-text-white">{data.user?.name}</span>
                       </span>
-                    }
-                    id="collasible-nav-dropdown"
-                    className=" tw-flex tw-flex-col "
-                  >
-                    <NavDropdown.ItemText className="tw-bg-inherit tw-text-center">
-                      <h1 className="tw-text-sm">
-                        Role : {Current_User?.role}
-                      </h1>
-                    </NavDropdown.ItemText>
-                    <NavDropdown.Item className="tw-bg-inherit">
-                      <Link href={"/"}>
-                        <Button
-                          className="w-100 tw-font-bold hover:tw-text-white tw-text-white hover:tw-bg-cyan-200 tw-bg-cyan-400 tw-mx-1 tw-p-2"
+                    </DropdownToggle>
+                    <DropdownMenu
+                      className={
+                        "tw-relative tw-w-fit  tw-justify-center " +
+                        (Current_Theme === "Dark"
+                          ? " tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
+                          : "")
+                      }
+                    >
+                      <div
+                        className={
+                          "tw-flex  tw-px-4 tw-flex-col tw-items-center tw-space-y-2" +
+                          (Current_Theme === "Dark" ? " tw-text-white" : "")
+                        }
+                      >
+                        <Image
+                          src={data?.user?.image || ProfileIcon}
+                          alt="UserName profile image"
+                          width={60}
+                          height={60}
+                          className="rounded-circle "
+                          quality={100}
+                        />
+                        <h1 className="tw-font-bold tw-text-xl">
+                          {data.user?.name}
+                        </h1>
+                        <span> {data.user?.email}</span>
+
+                        {/* <button
+                          // variant="flat"
+                          className=" tw-font-bold tw-mx-1 tw-p-2 tw-rounded-md tw-bg-gray-900 tw-text-white hover:tw-bg-gray-700"
+                          onClick={Theme_Change_Handler}
+                        >
+                          {(Theme === "Dark" ? "Light" : "Dark") + " Theme"}
+                        </button> */}
+
+                        <button
+                          // variant="flat"
+                          className=" tw-font-bold tw-mx-1 tw-p-2 tw-rounded-md tw-bg-gray-900 tw-text-white hover:tw-bg-gray-700"
                           onClick={signOutHandler}
                         >
                           Sign Out
-                        </Button>
-                      </Link>
-                    </NavDropdown.Item>
-
-                    {/* </Dropdown.Item> */}
-                  </NavDropdown>
+                        </button>
+                      </div>
+                    </DropdownMenu>
+                  </Dropdown>
                 </Nav>
               ) : (
                 <Nav>
-                  <Button
-                    variant="light"
-                    className="tw-text-white"
-                    onClick={signinHandler}
-                  >
+                  <Button variant="flat" className="" onClick={signinHandler}>
                     Sign In
                   </Button>
                 </Nav>
