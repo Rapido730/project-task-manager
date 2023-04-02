@@ -1,62 +1,73 @@
 import React, { useState, useEffect, Fragment } from "react";
-
-// import {
-//   Button,
-//   Container,
-//   ListGroup,
-//   ListGroupItem,
-//   Offcanvas,
-// } from "react-bootstrap";
-// // import Button from "react-bootstrap/Button";
-// import Card from "react-bootstrap/Card";
-// import Image from "next/image";
-// import DeleteIcon from "../assests/deleteLogo.png";
+import { Project_Type } from "@/DB/models/Project.Model";
+import { Project_Action_Type } from "@/Store/Project/Project.Types";
+import Project_Preview from "./project_preview.component";
+import {
+  Button,
+  Container,
+  ListGroup,
+  ListGroupItem,
+  Dropdown,
+  Offcanvas,
+} from "react-bootstrap";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
+import Image from "next/image";
+import DeleteIcon from "../assests/deleteLogo.png";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { Select_Current_User } from "@/Store/User/User.Selector";
+import {
+  Select_Current_User,
+  Select_User_Data,
+} from "@/Store/User/User.Selector";
 import { State_Type } from "@/Store/Root_Reducer";
+import { Read_Users } from "@/Services/User.Services";
+import Create_Action from "@/Store/Action_Creator";
+import { User_Action_Type } from "@/Store/User/User.Types";
+import { Fetch_All_Projects_Admin } from "@/Services/Project.Services";
+import { User_Type } from "@/DB/models/User.Model";
+import { faL } from "@fortawesome/free-solid-svg-icons";
+import Developer_Tasks from "./developer_task.component";
+import Developer_Body from "./developer_body.component";
 
-const Body = () => {
+const Admin_Body = () => {
   // console.log({ body: selectedProject });
   const Dispatch = useDispatch();
 
   const Current_User = useSelector((State: State_Type) =>
     Select_Current_User(State)
   );
-  // const Users = useSelector((State: State_Type) => Select_All_Users(State));
-  const { Selected_Category } = useSelector(
-    (state: State_Type) => state.Category
+  const Selected_User = useSelector(
+    (State: State_Type) => State.User.Selected_User
   );
-  const { Project_Data } = useSelector((state: State_Type) => state.Project);
-
+  const Users = useSelector((State: State_Type) => Select_User_Data(State));
+  const [ShowUserCanvas, SetShowUserCanvas] = useState(false);
+  const { Project_Data, Selected_Project } = useSelector(
+    (state: State_Type) => state.Project
+  );
+  const [Projects, SetProjects] = useState<Project_Type[]>();
   const [ModalFormVisible, setModalFormVisible] = useState(false);
   const [Template_Preview, set_Template_Preview] = useState(false);
 
   const get_All_Users = async () => {
     if (Current_User) {
-      const response = await axios.get(
-        "/api/database.api/user.api/read_user.api"
-      );
+      const { Status, Response_Data } = await Read_Users(Current_User);
 
-      if (response.status == 200) {
-        console.log(response.data.Users);
-        Dispatch({ type: "Set_Users", payload: response.data.Users });
-        // set_Project_data(response.data.Projects); //  getting error Cannot update a component (`Header`) while rendering a different component (`He`). To locate the bad setState() call inside `He`
-      } else {
-        alert("users not fetch try again");
+      if (Status === "Success") {
+        Dispatch(Create_Action(User_Action_Type.Set_User_Data, Response_Data));
       }
     }
   };
 
   const get_All_Projects = async () => {
     if (Current_User) {
-      const response = await axios.get(
-        "/api/database.api/project.api/read_All.projects.admin"
+      const { Status, Response_Data } = await Fetch_All_Projects_Admin(
+        Current_User
       );
 
-      if (response.status == 200) {
-        console.log(response.data.Projects);
-        Dispatch({ type: "Set_Project_Data", payload: response.data.Projects });
+      if (Status === "Success") {
+        // console.log(response.data.Projects);
+        Dispatch({ type: "Set_Project_Data", payload: Response_Data });
         // set_Project_data(response.data.Projects); //  getting error Cannot update a component (`Header`) while rendering a different component (`He`). To locate the bad setState() call inside `He`
       } else {
         alert("users not fetch try again");
@@ -64,10 +75,41 @@ const Body = () => {
     }
   };
 
+  const SelectProjectHandler = (
+    event:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.MouseEvent<Element, MouseEvent>,
+    project: Project_Type | null
+  ) => {
+    event.preventDefault();
+    Dispatch(Create_Action(Project_Action_Type.Select_Project, project));
+  };
+
+  const SelectUserHandler = (
+    event:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.MouseEvent<Element, MouseEvent>,
+    User: User_Type | null
+  ) => {
+    event.preventDefault();
+    Dispatch(Create_Action(Project_Action_Type.Select_Project, null));
+    Dispatch(Create_Action(User_Action_Type.Select_User, User));
+  };
   useEffect(() => {
     get_All_Users();
     get_All_Projects();
   }, []);
+
+  useEffect(() => {
+    if (Selected_User) {
+      const filteredProject = Project_Data.filter(
+        (project) => project.manager_Id === Selected_User?._id
+      );
+      SetProjects(filteredProject);
+    } else {
+      SetProjects(Project_Data);
+    }
+  }, [Project_Data, Selected_User]);
 
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 
@@ -77,29 +119,175 @@ const Body = () => {
   return (
     <Fragment>
       <div className="tw-flex tw-flex-row tw-h-full">
-        <div className="tw-w-64 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
+        <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
           <h1 className="tw-text-xl tw-mx-auto tw-font-bold ">Users</h1>
           <div className="">
-            {/* <ListGroup>
-              {Users.map((user) => (
-                <ListGroup.Item
-                  key={user.email}
-                  action
-                  variant="light"
-                  className="tw-overflow-auto"
-                >
-                  {user.email}
-                </ListGroup.Item>
-              ))}
-            </ListGroup> */}
+            <Accordion defaultActiveKey="0">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Users</Accordion.Header>
+                <Accordion.Body>
+                  <Accordion defaultActiveKey="0">
+                    <Accordion.Item eventKey="0">
+                      <Accordion.Header>Managers</Accordion.Header>
+                      <Accordion.Body>
+                        {Users.filter((user) => user.role === "manager").map(
+                          (user) => (
+                            <h1
+                              key={user.email}
+                              className="tw-overflow-auto tw-cursor-pointer tw-text-xl"
+                              onClick={(event) =>
+                                SelectUserHandler(event, user)
+                              }
+                            >
+                              {user.email}
+                            </h1>
+                          )
+                        )}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="1">
+                      <Accordion.Header>Developers</Accordion.Header>
+                      <Accordion.Body>
+                        {Users.filter((user) => user.role === "developer").map(
+                          (user) => (
+                            <h1
+                              key={user.email}
+                              // action
+                              // variant="light"
+                              className="tw-overflow-auto tw-cursor-pointer tw-text-xl"
+                              onClick={(event) =>
+                                SelectUserHandler(event, user)
+                              }
+                            >
+                              {user.email}
+                            </h1>
+                          )
+                        )}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item
+                eventKey="1"
+                onClick={() => {
+                  console.log("open projets");
+                  Dispatch(Create_Action(User_Action_Type.Select_User, null));
+                  get_All_Projects();
+                }}
+              >
+                <Accordion.Header>Projects</Accordion.Header>
+                <Accordion.Body>
+                  <ListGroup>
+                    <ListGroup.Item
+                      key={"8465213896"}
+                      action
+                      variant="light"
+                      className="tw-overflow-auto"
+                      onClick={(event) => SelectProjectHandler(event, null)}
+                    >
+                      {"Show All"}
+                    </ListGroup.Item>
+                    {Projects &&
+                      Project_Data.map((project) => (
+                        <ListGroup.Item
+                          key={project.name}
+                          action
+                          variant="light"
+                          className="tw-overflow-auto"
+                          onClick={(event) =>
+                            SelectProjectHandler(event, project)
+                          }
+                        >
+                          {project.name}
+                        </ListGroup.Item>
+                      ))}
+                  </ListGroup>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
           </div>
         </div>
+        <div>
+          {Selected_Project ? (
+            <Project_Preview />
+          ) : Selected_User?.role === "manager" ? (
+            <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-3 tw-gap-8">
+              <Button
+                variant="primary"
+                onClick={() => SetShowUserCanvas(true)}
+                className="me-2"
+              >
+                {"Profile"}
+              </Button>
+              {Projects &&
+                Projects.map((project) => (
+                  <Card
+                    style={{ width: "18rem" }}
+                    key={project.name}
+                    className="text-center tw-shadow-lg"
+                  >
+                    <Card.Header>{project.name}</Card.Header>
+                    <Card.Body>
+                      {/* <Card.Title>{project.name}</Card.Title> */}
+                      <Card.Text>{project.description}</Card.Text>
+                      <Button
+                        variant="primary"
+                        onClick={(event) =>
+                          SelectProjectHandler(event, project)
+                        }
+                      >
+                        more...
+                      </Button>
+                    </Card.Body>
+                    <Card.Footer className="text-muted">
+                      Created on :{" "}
+                      {project.created_At &&
+                        project.created_At.toString().slice(0, 10)}
+                    </Card.Footer>
+                  </Card>
+                ))}
+            </div>
+          ) : (
+            <div>
+              <Developer_Body />
+            </div>
+          )}
+        </div>
       </div>
+
+      {ShowUserCanvas && (
+        <div>
+          <Offcanvas
+            show={ShowUserCanvas}
+            onHide={() => SetShowUserCanvas(false)}
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>{Selected_User?.name}</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <div className="tw-flex tw-items-center">
+                <h1 className="tw-text-2xl tw-p-2">Role</h1>
+                <Dropdown>
+                  <Dropdown.Toggle variant="flat" id="dropdown-basic">
+                    <span className="tw-text-xl">{Selected_User?.role}</span>
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item>Manager</Dropdown.Item>
+                    <Dropdown.Item>Developer</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </Offcanvas.Body>
+          </Offcanvas>
+        </div>
+      )}
     </Fragment>
   );
 };
 
-export default Body;
+export default Admin_Body;
 
 //  <div className="tw-grid tw-grid-cols-3 tw-gap-12 mx-auto">
 //    {Project_Data.map((project) => (

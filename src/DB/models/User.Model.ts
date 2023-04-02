@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema, Types, } from "mongoose";
+import mongoose, { model, models, Schema, Types } from "mongoose";
 
 const User_Schema = new Schema({
   name: {
@@ -30,6 +30,12 @@ User_Schema.virtual("projects", {
   ref: "Project",
   localField: "_id",
   foreignField: "manager_Id",
+});
+
+User_Schema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "worker_Id",
 });
 
 export type User_Type = {

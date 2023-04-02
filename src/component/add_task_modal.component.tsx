@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Notification_Toast from "./notification_toast.component";
 import { Modal, Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,6 +35,14 @@ const Add_Task_Modal_Form = ({
   const { Selected_Project } = useSelector(
     (state: State_Type) => state.Project
   );
+
+  useEffect(() => {
+    if (Current_User?.role === "developer") {
+      const New_Task_Field = Task_Field;
+      New_Task_Field.assigned_to = Current_User.email;
+      set_Task_Field(New_Task_Field);
+    }
+  }, []);
 
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
@@ -74,13 +82,13 @@ const Add_Task_Modal_Form = ({
           worker_Id: Task_Field.assigned_to,
         };
         const { Status, Response_Data } = await Create_Task(data);
-        if (Status === "Success" && Response_Data ) {
+        if (Status === "Success" && Response_Data) {
           Dispatch(Create_Action(Task_Action_Type.Add_Task, Response_Data));
-        //   Set_Notification_Data({
-        //     Heading: "New task is created",
-        //     Body: `You have successfully created ${Response_Data.name}`,
-        //   });
-        //   Set_Notification_Toast_Show(true);
+          //   Set_Notification_Data({
+          //     Heading: "New task is created",
+          //     Body: `You have successfully created ${Response_Data.name}`,
+          //   });
+          //   Set_Notification_Toast_Show(true);
           setModalFormVisible(false);
         } else if (Status == "Database_Error") {
           Set_Notification_Data({
@@ -146,17 +154,18 @@ const Add_Task_Modal_Form = ({
               />
               <Form.Text className="text-muted"></Form.Text>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Assigned to</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="email"
-                name="assigned_to"
-                onChange={ProjectFieldChangeHandler}
-              />
-              <Form.Text className="text-muted"></Form.Text>
-            </Form.Group>
+            {Current_User?.role !== "developer" && (
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Assigned to</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="email"
+                  onChange={ProjectFieldChangeHandler}
+                />
+                <Form.Text className="text-muted"></Form.Text>
+              </Form.Group>
+            )}
             <div className="d-flex gap-3">
               <Button variant="dark" type="submit">
                 Add

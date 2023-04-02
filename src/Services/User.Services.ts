@@ -34,3 +34,21 @@ export const Create_User = async (data: User_Type) => {
     return { Status: "Server_Error", Response_Data: {} };
   }
 };
+
+export const Read_Users = async (user: User_Type) => {
+  try {
+    const response = await axios.post(
+      "/api/database.api/user.api/read_all_user.admin.api",
+      {
+        ...user,
+      }
+    );
+    if (response.status === 200) {
+      return { Status: "Success", Response_Data: response.data.Users };
+    } else {
+      return { Status: "Database_Error", Response_Data: response };
+    }
+  } catch {
+    return { Status: "Server_Error", Response_Data: {} };
+  }
+};

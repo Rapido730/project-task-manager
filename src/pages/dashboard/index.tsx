@@ -14,6 +14,7 @@ import { GetServerSideProps } from "next";
 import axios from "axios";
 import Manager_Body from "@/component/manager_body.component";
 import Developer_Body from "@/component/developer_body.component";
+import Admin_Body from "@/component/admin_body.component";
 interface Props {
   User: User_Type | undefined;
 }
@@ -31,9 +32,12 @@ function Home({ User }: Props) {
 
   useEffect(() => {
     Dispatch(Create_Action(User_Action_Type.Set_Current_User, User));
+    if (User?.role !== "admin") {
+      Dispatch(Create_Action(User_Action_Type.Select_User, User));
+    }
   }, [data]);
 
-  const Header = dynamic(() => import("../component/header.component"), {
+  const Header = dynamic(() => import("../../component/header.component"), {
     ssr: false,
   });
 
@@ -44,14 +48,18 @@ function Home({ User }: Props) {
   };
 
   return (
-    <div className="tw-h-screen  tw-flex tw-flex-col">
+    <div className="tw-h-screen tw-flex tw-flex-col">
       <div className="tw-flex-none">
         <Header />
       </div>
-      <div className="tw-flex-grow tw-flex tw-overflow-auto">
-        <h1 className="text-2xl tw-mx-auto tw-my-auto">
-          welcome to task management system
-        </h1>
+      <div className="tw-flex-grow tw-overflow-auto">
+        {Current_User?.role === "admin" ? (
+          <Admin_Body />
+        ) : Current_User?.role === "manager" ? (
+          <Manager_Body />
+        ) : (
+          <Developer_Body />
+        )}
       </div>
       <div></div>
     </div>

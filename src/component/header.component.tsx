@@ -19,6 +19,7 @@ import Router, { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { State_Type } from "@/Store/Root_Reducer";
 import { Select_Current_User } from "@/Store/User/User.Selector";
+import Link from "next/link";
 
 const Header = () => {
   const { data } = useSession();
@@ -28,6 +29,7 @@ const Header = () => {
       Router.push("/dashboard");
     });
   };
+  const router = useRouter();
 
   const signOutHandler = (event: any) => {
     signOut();
@@ -59,6 +61,14 @@ const Header = () => {
                       Dashboard
                     </Nav.Link>
                   )}
+                  {/* <Nav.Link
+                    className="tw-text-white"
+                    onClick={() => {
+                      router.push("/dashboard/projects", undefined, { shallow: true });
+                    }}
+                  >
+                    Dashboard
+                  </Nav.Link> */}
                 </Nav>
               )}
 
@@ -87,12 +97,14 @@ const Header = () => {
                       </h1>
                     </NavDropdown.ItemText>
                     <NavDropdown.Item className="tw-bg-inherit">
-                      <Button
-                        className="w-100 tw-font-bold hover:tw-text-white tw-text-white hover:tw-bg-cyan-200 tw-bg-cyan-400 tw-mx-1 tw-p-2"
-                        onClick={signOutHandler}
-                      >
-                        Sign Out
-                      </Button>
+                      <Link href={"/"}>
+                        <Button
+                          className="w-100 tw-font-bold hover:tw-text-white tw-text-white hover:tw-bg-cyan-200 tw-bg-cyan-400 tw-mx-1 tw-p-2"
+                          onClick={signOutHandler}
+                        >
+                          Sign Out
+                        </Button>
+                      </Link>
                     </NavDropdown.Item>
 
                     {/* </Dropdown.Item> */}

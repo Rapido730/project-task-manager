@@ -15,6 +15,7 @@ export default async function create(
       const new_User = new User({
         name: data.name,
         email: data.email,
+        role:"developer"
       });
       await new_User.save();
       res.status(201).json({

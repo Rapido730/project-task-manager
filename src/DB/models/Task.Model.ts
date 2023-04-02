@@ -1,11 +1,4 @@
 import mongoose, { model, models, Schema, Types } from "mongoose";
-export enum Task_Status {
-  ToDo = "ToDo",
-  ReworkRequired = "ReworkRequired",
-  InReview = "InReview",
-  InProgress = "InProgress",
-  Completed = "Completed",
-}
 
 const Task_Schema = new Schema({
   name: {
@@ -49,6 +42,7 @@ const Task_Schema = new Schema({
 });
 
 export type Task_Type = {
+  _id?: Types.ObjectId;
   name: string;
   description: string;
   status: string;

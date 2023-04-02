@@ -1,25 +1,26 @@
 import { connectMongoose } from "@/DB/Connect_MongoDB";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Project } from "@/DB/models/Project.Model";
+import { Task } from "@/DB/models/Task.Model";
+import { User } from "@/DB/models/User.Model";
 export default async function create(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
     connectMongoose();
-    // console.log("read project")
     const data = req.body;
-    console.log("reading projects", data);
-    const Project_Data = await Project.find({
-      _id: {
-        $in: data.ids,
-      }, 
+    const current_User = await User.findOne({ ...data });
+    console.log(current_User);
+    console.log("read")
+    await current_User.populate({
+      path: "tasks",
     });
-    console.log({ Project_Data });
+    console.log({current_User})
     res.status(200).json({
-      Projects: Project_Data,
+      Tasks: current_User.tasks,
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   }
 }

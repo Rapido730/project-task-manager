@@ -83,10 +83,8 @@ const Manager_Body = () => {
   return (
     <Fragment>
       <div className="tw-flex tw-flex-col">
-        <div className="tw-self-end tw-p-2">
-          <Button onClick={() => SetModalFormVisible(true)}>Add Project</Button>
-        </div>
-        <div className="tw-flex tw-mt-10">
+        <div className="tw-self-end tw-p-2"></div>
+        <div className="tw-flex tw-mt-10 tw-justify-between">
           <div className="tw-w-56">
             <ListGroup>
               <ListGroup.Item
@@ -108,9 +106,13 @@ const Manager_Body = () => {
                     {project.name}
                   </ListGroup.Item>
                 ))}
+              <Button onClick={() => SetModalFormVisible(true)}>
+                Add Project
+              </Button>
             </ListGroup>
           </div>
           {Selected_Project ? (
+
             <Project_Preview />
           ) : (
             <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-4 tw-gap-8">

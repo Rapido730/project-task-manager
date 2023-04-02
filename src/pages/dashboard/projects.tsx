@@ -18,22 +18,14 @@ interface Props {
   User: User_Type | undefined;
 }
 
-function Home({ User }: Props) {
+function Home() {
   const { data } = useSession();
   const Dispatch = useDispatch();
 
   const { Current_User } = useSelector((State: State_Type) => State.User);
 
-  const signinHandler = (event: any) => {
-    signIn();
-    Router.push("/dashboard");
-  };
 
-  useEffect(() => {
-    Dispatch(Create_Action(User_Action_Type.Set_Current_User, User));
-  }, [data]);
-
-  const Header = dynamic(() => import("../component/header.component"), {
+  const Header = dynamic(() => import("../../component/header.component"), {
     ssr: false,
   });
 
@@ -44,14 +36,12 @@ function Home({ User }: Props) {
   };
 
   return (
-    <div className="tw-h-screen  tw-flex tw-flex-col">
+    <div className="tw-h-screen tw-flex tw-flex-col">
       <div className="tw-flex-none">
         <Header />
       </div>
-      <div className="tw-flex-grow tw-flex tw-overflow-auto">
-        <h1 className="text-2xl tw-mx-auto tw-my-auto">
-          welcome to task management system
-        </h1>
+      <div className="tw-flex-grow tw-overflow-auto">
+        <Developer_Body />
       </div>
       <div></div>
     </div>
@@ -60,27 +50,3 @@ function Home({ User }: Props) {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  let User = null;
-  try {
-    const data = await getSession(context);
-    console.log(data);
-    const response = await axios.post(
-      "http://localhost:3000/api/database.api/user.api/create_user.api",
-      {
-        email: data?.user?.email,
-        name: data?.user?.name,
-      }
-    );
-    User = response.data.user;
-  } catch {
-    User = null;
-  }
-
-  console.log({ User });
-  return {
-    props: {
-      User: User,
-    },
-  };
-};

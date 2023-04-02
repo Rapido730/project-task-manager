@@ -1,5 +1,6 @@
 import { Project_Type } from "@/DB/models/Project.Model";
 import { Task, Task_Type } from "@/DB/models/Task.Model";
+import { User_Type } from "@/DB/models/User.Model";
 import axios from "axios";
 import { Types } from "mongoose";
 
@@ -61,7 +62,6 @@ export const Create_Task = async (Data: {
       return { Status: "Database_Error", Response_Data: response };
     }
   } catch {
-    
     return { Status: "Server_Error", Response_Data: {} };
   }
 };
@@ -73,6 +73,25 @@ export const Fetch_All_Task = async (project: Project_Type) => {
       "/api/database.api/task.api/read_all.task",
       {
         ...project,
+      }
+    );
+    if (response.status === 200) {
+      return { Status: "Success", Response_Data: response.data.Tasks };
+    } else {
+      return { Status: "Database_Error", Response_Data: response };
+    }
+  } catch {
+    return { Status: "Server_Error", Response_Data: {} };
+  }
+};
+
+export const Fetch_All_User_Task = async (User: User_Type) => {
+  try {
+    // console.log({ project });
+    const response = await axios.post(
+      "/api/database.api/task.api/read_all_users.task",
+      {
+        ...User,
       }
     );
     if (response.status === 200) {
