@@ -24,12 +24,19 @@ const Add_Project_Modal_Form = ({
     description: "",
   });
 
+  const [Form_Notification, Set_Form_Notification] = useState({
+    IsOpen: false,
+    text: "",
+  });
+
   const Current_User = useSelector((State: State_Type) =>
     Select_Current_User(State)
   );
 
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
+
+  const { Project_Data } = useSelector((state: State_Type) => state.Project);
 
   const [Notification_Data, Set_Notification_Data] = useState<{
     Heading: String;
@@ -63,6 +70,20 @@ const Add_Project_Modal_Form = ({
           description: Project_Field.description,
           manager_Id: Current_User._id,
         };
+        const res = Project_Data.reduce((res, project) => {
+          if (project.name === data.name) {
+            return res || true;
+          }
+          return res || false;
+        }, false);
+
+        if (res) {
+          Set_Form_Notification({
+            IsOpen: true,
+            text: "Project name already exists!",
+          });
+          return;
+        }
         const { Status, Response_Data } = await Create_Project(data);
         if (Status === "Success") {
           Dispatch(
@@ -122,7 +143,13 @@ const Add_Project_Modal_Form = ({
                 name="name"
                 onChange={ProjectFieldChangeHandler}
               />
-              <Form.Text className="text-muted"></Form.Text>
+              {Form_Notification.IsOpen && (
+                <Form.Text className="text-muted">
+                  <span className="tw-mx-4 tw-text-red-500">
+                    {Form_Notification.text}
+                  </span>
+                </Form.Text>
+              )}
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>description</Form.Label>
@@ -139,7 +166,10 @@ const Add_Project_Modal_Form = ({
               <Button variant="dark" type="submit">
                 Add
               </Button>
-              <p className="my-auto" onClick={() => setModalFormVisible(false)}>
+              <p
+                className="my-auto tw-cursor-pointer"
+                onClick={() => setModalFormVisible(false)}
+              >
                 Cancel
               </p>
             </div>

@@ -3,7 +3,7 @@ import { Fetch_All_Projects } from "@/Services/Project.Services";
 import { Select_Current_User } from "@/Store/User/User.Selector";
 import { useDispatch, useSelector } from "react-redux";
 import { State_Type } from "@/Store/Root_Reducer";
-import { Button, Card, ListGroup } from "react-bootstrap";
+import { Button, Card, ListGroup, Dropdown, Offcanvas } from "react-bootstrap";
 import Add_Project_Modal_Form from "./add_project_modal.component";
 import { Fetch_All_Projects_with_ids } from "@/Services/Project.Services";
 import { Project_Action_Type } from "@/Store/Project/Project.Types";
@@ -39,7 +39,7 @@ const Developer_Body = () => {
 
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
-
+  const [ShowUserCanvas, SetShowUserCanvas] = useState(false);
   const get_all_tasks = async () => {
     if (Selected_User && Selected_User._id) {
       try {
@@ -152,6 +152,15 @@ const Developer_Body = () => {
               <Developer_Tasks />
             ) : (
               <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-3 tw-gap-8">
+                {Current_User?.role === "admin" && (
+                  <Button
+                    variant="dark"
+                    onClick={() => SetShowUserCanvas(true)}
+                    className="me-2"
+                  >
+                    {"Profile"}
+                  </Button>
+                )}
                 {Projects &&
                   Projects.map((project) => (
                     <Card
@@ -164,7 +173,7 @@ const Developer_Body = () => {
                         {/* <Card.Title>{project.name}</Card.Title> */}
                         <Card.Text>{project.description}</Card.Text>
                         <Button
-                          variant="primary"
+                          variant="dark"
                           onClick={(event) =>
                             SelectProjectHandler(event, project)
                           }
@@ -207,6 +216,33 @@ const Developer_Body = () => {
               Notification_Toast_Show={Notification_Toast_Show}
             ></Notification_Toast>
           </div>
+        </div>
+      )}
+      {ShowUserCanvas && (
+        <div>
+          <Offcanvas
+            show={ShowUserCanvas}
+            onHide={() => SetShowUserCanvas(false)}
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>{Selected_User?.name}</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <div className="tw-flex tw-items-center">
+                <h1 className="tw-text-2xl tw-p-2">Role</h1>
+                <Dropdown>
+                  <Dropdown.Toggle variant="flat" id="dropdown-basic">
+                    <span className="tw-text-xl">{Selected_User?.role}</span>
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item>Manager</Dropdown.Item>
+                    <Dropdown.Item>Developer</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </Offcanvas.Body>
+          </Offcanvas>
         </div>
       )}
     </Fragment>

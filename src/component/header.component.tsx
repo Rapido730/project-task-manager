@@ -46,7 +46,11 @@ const Header = () => {
 
   return (
     <Fragment>
-      <Navbar expand="lg" className="tw-font-bold  tw-bg-gray-200">
+      <Navbar
+        variant="dark"
+        expand="lg"
+        className="tw-font-bold  tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
+      >
         <Container fluid className="">
           <Navbar.Brand href="/">
             <FontAwesomeIcon icon={faListAlt} size="2x" />

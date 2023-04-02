@@ -10,6 +10,9 @@ import Notification_Toast from "./notification_toast.component";
 import Create_Action from "@/Store/Action_Creator";
 import { Project_Type } from "@/DB/models/Project.Model";
 import Project_Preview from "./project_preview.component";
+import Delete_Icon from "../assests/Delete.svg";
+import Image from "next/image";
+import { Delete_Project } from "@/Services/Project.Services";
 
 const Manager_Body = () => {
   const Dispatch = useDispatch();
@@ -62,14 +65,24 @@ const Manager_Body = () => {
     }
   };
 
-  const SelectProjectHandler = (
+  const SelectProjectHandler = async (
     event:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.MouseEvent<Element, MouseEvent>,
     project: Project_Type | null
   ) => {
     event.preventDefault();
+
     Dispatch(Create_Action(Project_Action_Type.Select_Project, project));
+  };
+
+  const DeleteProjectHandler = async (
+    event: React.MouseEvent<HTMLImageElement, MouseEvent>,
+    project: Project_Type
+  ) => {
+    event.preventDefault();
+    await Delete_Project(project);
+    Dispatch(Create_Action(Project_Action_Type.Delete_Project, project));
   };
 
   useEffect(() => {
@@ -82,10 +95,9 @@ const Manager_Body = () => {
 
   return (
     <Fragment>
-      <div className="tw-flex tw-flex-col">
-        <div className="tw-self-end tw-p-2"></div>
-        <div className="tw-flex tw-mt-10 tw-justify-between">
-          <div className="tw-w-56">
+      <div className="tw-flex tw-flex-col tw-h-full">
+        <div className="tw-flex tw-h-full  tw-justify-between">
+          <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
             <ListGroup>
               <ListGroup.Item
                 onClick={(event) => SelectProjectHandler(event, null)}
@@ -106,29 +118,44 @@ const Manager_Body = () => {
                     {project.name}
                   </ListGroup.Item>
                 ))}
-              <Button onClick={() => SetModalFormVisible(true)}>
+              <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
                 Add Project
               </Button>
             </ListGroup>
           </div>
           {Selected_Project ? (
-
             <Project_Preview />
           ) : (
-            <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-4 tw-gap-8">
+            <div className="tw-grid tw-shadow-inner tw-w-full tw-m-2 tw-p-5 tw-grid-cols-3 tw-gap-8">
               {Projects &&
                 Projects.map((project) => (
                   <Card
-                    style={{ width: "18rem" }}
+                    style={{ width: "18rem", height: "14rem" }}
                     key={project.name}
                     className="text-center tw-shadow-lg"
                   >
-                    <Card.Header>{project.name}</Card.Header>
+                    <Card.Header>
+                      <div className="tw-flex tw-justify-center">
+                        <h1 className="tw-text-xl tw-font-bold">
+                          {project.name}
+                        </h1>
+                        <Image
+                          className="ms-auto growable tw-cursor-pointer"
+                          src={Delete_Icon}
+                          alt="img"
+                          height={25}
+                          onClick={(event) =>
+                            DeleteProjectHandler(event, project)
+                          }
+                          width={25}
+                        />
+                      </div>
+                    </Card.Header>
                     <Card.Body>
                       {/* <Card.Title>{project.name}</Card.Title> */}
                       <Card.Text>{project.description}</Card.Text>
                       <Button
-                        variant="primary"
+                        variant="dark"
                         onClick={(event) =>
                           SelectProjectHandler(event, project)
                         }

@@ -149,12 +149,13 @@ const Developer_Tasks = () => {
     const inProgress = Task_Data.filter(
       (task) => task.status === Task_Status.InProgress
     );
-    Set_Tasks({
+    const updated_Task = {
       todo: todo_list,
       completed,
       inProgress,
       review,
-    });
+    };
+    Set_Tasks(updated_Task);
   }, [Task_Data]);
 
   return (

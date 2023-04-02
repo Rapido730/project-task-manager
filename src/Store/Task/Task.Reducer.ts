@@ -19,7 +19,6 @@ export const Task_Reducer = (State = INITIAL_STATE, Action: any) => {
     case Task_Action_Type.Set_Task_Data:
       const New_State = {
         ...State,
-        Selected_Task: payload.length > 0 ? payload[0] : null,
         Task_Data: payload,
       };
       return New_State;
@@ -53,11 +52,7 @@ export const Task_Reducer = (State = INITIAL_STATE, Action: any) => {
       return { ...State, Task_Data: New_Updated_Data };
     case Task_Action_Type.Add_Task:
       const New_State_Data = State.Task_Data;
-      if (State.Selected_Task === null) {
-        State.Selected_Task = payload;
-      }
       New_State_Data.push(payload);
-
       return { ...State, Task_Data: New_State_Data };
 
     default:

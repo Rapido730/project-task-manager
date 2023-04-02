@@ -9,9 +9,14 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import Create_Action from "@/Store/Action_Creator";
 import { Task_Action_Type } from "@/Store/Task/Task.Types";
 import { Task_Type } from "@/DB/models/Task.Model";
-import { Card, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+
 import Add_Task_Modal_Form from "./add_task_modal.component";
 import Sidebar_Preview from "./sidebar.component";
+import Delete_Icon from "../assests/Delete.svg";
+import { Task_Delete } from "@/Services/Task.Services";
+import Image from "next/image";
 export const Task_Status = {
   ToDo: "ToDo",
   ReworkRequired: "ReworkRequired",
@@ -29,7 +34,7 @@ type Task_List_Type = {
 
 const Project_Preview = () => {
   const Dispatch = useDispatch();
-
+  console.log("aaya");
   const { Selected_Project } = useSelector(
     (State: State_Type) => State.Project
   );
@@ -39,14 +44,41 @@ const Project_Preview = () => {
     review: [],
     inProgress: [],
   });
-  const { Task_Data } = useSelector((state: State_Type) => state.Task);
+  const Task_Data = useSelector((state: State_Type) => state.Task.Task_Data);
+  console.log({ Task_Data });
   const [ModalFormVisible, SetModalFormVisible] = useState(false);
   const [Notification_Data, Set_Notification_Data] = useState({
     Heading: "",
     Body: "",
   });
 
+  useEffect(() => {
+    console.log({ Task_Data });
+    console.log("aaya");
+    const todo_list = Task_Data.filter(
+      (task) => task.status === Task_Status.ToDo
+    );
+    const completed = Task_Data.filter(
+      (task) => task.status === Task_Status.Completed
+    );
+    const review = Task_Data.filter(
+      (task) => task.status === Task_Status.InReview
+    );
+    const inProgress = Task_Data.filter(
+      (task) => task.status === Task_Status.InProgress
+    );
+    const updated_Task = {
+      todo: todo_list,
+      completed,
+      inProgress,
+      review,
+    };
+    Set_Tasks(updated_Task);
+  }, [Task_Data]);
+
   const [Task_Preview, Set_Task_Preview] = useState(false);
+
+  console.log({ Tasks });
 
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
@@ -170,33 +202,22 @@ const Project_Preview = () => {
 
     Set_Tasks({ todo, completed, review, inProgress: progress });
   };
-
-  useEffect(() => {
-    const todo_list = Task_Data.filter(
-      (task) => task.status === Task_Status.ToDo
-    );
-    const completed = Task_Data.filter(
-      (task) => task.status === Task_Status.Completed
-    );
-    const review = Task_Data.filter(
-      (task) => task.status === Task_Status.InReview
-    );
-    const inProgress = Task_Data.filter(
-      (task) => task.status === Task_Status.InProgress
-    );
-    Set_Tasks({
-      todo: todo_list,
-      completed,
-      inProgress,
-      review,
-    });
-  }, [Task_Data]);
+  const DeleteTaskHandler = async (
+    event: React.MouseEvent<HTMLImageElement, MouseEvent>,
+    task: Task_Type
+  ) => {
+    event.preventDefault();
+    await Task_Delete(task);
+    Dispatch(Create_Action(Task_Action_Type.Delete_Task, task));
+  };
 
   return (
     <Fragment>
-      <div className="tw-flex tw-flex-col tw-w-full tw-mx-12">
+      <div className="tw-flex tw-flex-col tw-w-full tw-mx-4">
         <div className="tw-self-end">
-          <Button onClick={() => SetModalFormVisible(true)}>Create Task</Button>
+          <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
+            Create Task
+          </Button>
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <div className=" tw-grid tw-grid-cols-4 tw-gap-8">
@@ -218,14 +239,30 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem" }}
+                          style={{ width: "18rem", height: "20rem" }}
                           key={task.name}
                           className="text-center tw-shadow-lg tw-mb-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
                         >
-                          <Card.Header>{task.name}</Card.Header>
+                          <Card.Header>
+                            <div className="tw-flex tw-justify-center">
+                              <h1 className="tw-text-xl tw-font-bold">
+                                {task.name}
+                              </h1>
+                              <Image
+                                className="ms-auto growable tw-cursor-pointer"
+                                src={Delete_Icon}
+                                alt="img"
+                                height={25}
+                                onClick={(event) =>
+                                  DeleteTaskHandler(event, task)
+                                }
+                                width={25}
+                              />
+                            </div>
+                          </Card.Header>
                           <Card.Body>
                             {/* <Card.Title>{project.name}</Card.Title> */}
                             <Card.Text>{task.description}</Card.Text>
@@ -233,7 +270,7 @@ const Project_Preview = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }
@@ -272,14 +309,30 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem" }}
+                          style={{ width: "18rem", height: "20rem" }}
                           key={task.name}
                           className="text-center tw-shadow-lg tw-mb-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
                         >
-                          <Card.Header>{task.name}</Card.Header>
+                          <Card.Header>
+                            <div className="tw-flex tw-justify-center">
+                              <h1 className="tw-text-xl tw-font-bold">
+                                {task.name}
+                              </h1>
+                              <Image
+                                className="ms-auto growable tw-cursor-pointer"
+                                src={Delete_Icon}
+                                alt="img"
+                                height={25}
+                                onClick={(event) =>
+                                  DeleteTaskHandler(event, task)
+                                }
+                                width={25}
+                              />
+                            </div>
+                          </Card.Header>
                           <Card.Body>
                             {/* <Card.Title>{project.name}</Card.Title> */}
                             <Card.Text>{task.description}</Card.Text>
@@ -287,7 +340,7 @@ const Project_Preview = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }
@@ -326,14 +379,30 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem" }}
+                          style={{ width: "18rem", height: "20rem" }}
                           key={task.name}
                           className="text-center tw-shadow-lg tw-mb-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
                         >
-                          <Card.Header>{task.name}</Card.Header>
+                          <Card.Header>
+                            <div className="tw-flex tw-justify-center">
+                              <h1 className="tw-text-xl tw-font-bold">
+                                {task.name}
+                              </h1>
+                              <Image
+                                className="ms-auto growable tw-cursor-pointer"
+                                src={Delete_Icon}
+                                alt="img"
+                                height={25}
+                                onClick={(event) =>
+                                  DeleteTaskHandler(event, task)
+                                }
+                                width={25}
+                              />
+                            </div>
+                          </Card.Header>
                           <Card.Body>
                             {/* <Card.Title>{project.name}</Card.Title> */}
                             <Card.Text>{task.description}</Card.Text>
@@ -341,7 +410,7 @@ const Project_Preview = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }
@@ -380,14 +449,30 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem" }}
+                          style={{ width: "18rem", height: "20rem" }}
                           key={task.name}
                           className="text-center tw-shadow-lg tw-mb-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
                         >
-                          <Card.Header>{task.name}</Card.Header>
+                          <Card.Header>
+                            <div className="tw-flex tw-justify-center">
+                              <h1 className="tw-text-xl tw-font-bold">
+                                {task.name}
+                              </h1>
+                              <Image
+                                className="ms-auto growable tw-cursor-pointer"
+                                src={Delete_Icon}
+                                alt="img"
+                                height={25}
+                                onClick={(event) =>
+                                  DeleteTaskHandler(event, task)
+                                }
+                                width={25}
+                              />
+                            </div>
+                          </Card.Header>
                           <Card.Body>
                             {/* <Card.Title>{project.name}</Card.Title> */}
                             <Card.Text>{task.description}</Card.Text>
@@ -395,7 +480,7 @@ const Project_Preview = () => {
                               {"Status : "} {task.status}
                             </Card.Text>
                             <Button
-                              variant="primary"
+                              variant="dark"
                               onClick={(event) =>
                                 Task_Select_Handler(event, task)
                               }

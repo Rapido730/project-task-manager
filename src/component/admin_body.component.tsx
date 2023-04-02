@@ -120,9 +120,8 @@ const Admin_Body = () => {
     <Fragment>
       <div className="tw-flex tw-flex-row tw-h-full">
         <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
-          <h1 className="tw-text-xl tw-mx-auto tw-font-bold ">Users</h1>
           <div className="">
-            <Accordion defaultActiveKey="0">
+            <Accordion defaultActiveKey="1">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Users</Accordion.Header>
                 <Accordion.Body>
@@ -184,7 +183,10 @@ const Admin_Body = () => {
                       action
                       variant="light"
                       className="tw-overflow-auto"
-                      onClick={(event) => SelectProjectHandler(event, null)}
+                      onClick={(event) => {
+                        SelectProjectHandler(event, null);
+                        SelectUserHandler(event, null);
+                      }}
                     >
                       {"Show All"}
                     </ListGroup.Item>
@@ -211,15 +213,17 @@ const Admin_Body = () => {
         <div>
           {Selected_Project ? (
             <Project_Preview />
-          ) : Selected_User?.role === "manager" ? (
+          ) : Selected_User?.role !== "developer" ? (
             <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-3 tw-gap-8">
-              <Button
-                variant="primary"
-                onClick={() => SetShowUserCanvas(true)}
-                className="me-2"
-              >
-                {"Profile"}
-              </Button>
+              {Selected_User && (
+                <Button
+                  variant="dark"
+                  onClick={() => SetShowUserCanvas(true)}
+                  className="me-2"
+                >
+                  {"Profile"}
+                </Button>
+              )}
               {Projects &&
                 Projects.map((project) => (
                   <Card
@@ -232,7 +236,7 @@ const Admin_Body = () => {
                       {/* <Card.Title>{project.name}</Card.Title> */}
                       <Card.Text>{project.description}</Card.Text>
                       <Button
-                        variant="primary"
+                        variant="dark"
                         onClick={(event) =>
                           SelectProjectHandler(event, project)
                         }

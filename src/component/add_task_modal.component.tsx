@@ -31,18 +31,10 @@ const Add_Task_Modal_Form = ({
   const Current_User = useSelector((State: State_Type) =>
     Select_Current_User(State)
   );
-
+  const { Task_Data } = useSelector((state: State_Type) => state.Task);
   const { Selected_Project } = useSelector(
     (state: State_Type) => state.Project
   );
-
-  useEffect(() => {
-    if (Current_User?.role === "developer") {
-      const New_Task_Field = Task_Field;
-      New_Task_Field.assigned_to = Current_User.email;
-      set_Task_Field(New_Task_Field);
-    }
-  }, []);
 
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
@@ -51,7 +43,10 @@ const Add_Task_Modal_Form = ({
     Heading: String;
     Body: String;
   }>({ Heading: "", Body: "" });
-
+  const [Form_Notification, Set_Form_Notification] = useState({
+    IsOpen: false,
+    text: "",
+  });
   const cancelButtonHandler = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -79,16 +74,44 @@ const Add_Task_Modal_Form = ({
           description: Task_Field.description,
           manager_Id: Selected_Project.manager_Id,
           project_Id: Selected_Project._id,
-          worker_Id: Task_Field.assigned_to,
+          worker_Id:
+            Current_User?.role === "developer"
+              ? Current_User.email
+              : Task_Field.assigned_to,
         };
+
+        const res = Task_Data.reduce((res, task) => {
+          if (task.name === data.name) {
+            return res || true;
+          }
+          return res || false;
+        }, false);
+
+        if (res) {
+          Set_Form_Notification({
+            IsOpen: true,
+            text: "Task name already exists!",
+          });
+          return;
+        }
+
+        data.worker_Id =
+          Current_User?.role === "developer"
+            ? Current_User.email
+            : Task_Field.assigned_to;
         const { Status, Response_Data } = await Create_Task(data);
         if (Status === "Success" && Response_Data) {
-          Dispatch(Create_Action(Task_Action_Type.Add_Task, Response_Data));
-          //   Set_Notification_Data({
-          //     Heading: "New task is created",
-          //     Body: `You have successfully created ${Response_Data.name}`,
-          //   });
-          //   Set_Notification_Toast_Show(true);
+          Dispatch(
+            Create_Action(Task_Action_Type.Set_Task_Data, [
+              ...Task_Data,
+              Response_Data,
+            ])
+          );
+          Set_Notification_Data({
+            Heading: "New task is created",
+            Body: `You have successfully created ${Response_Data.name}`,
+          });
+          Set_Notification_Toast_Show(true);
           setModalFormVisible(false);
         } else if (Status == "Database_Error") {
           Set_Notification_Data({
@@ -141,7 +164,13 @@ const Add_Task_Modal_Form = ({
                 name="name"
                 onChange={ProjectFieldChangeHandler}
               />
-              <Form.Text className="text-muted"></Form.Text>
+              {Form_Notification.IsOpen && (
+                <Form.Text className="text-muted">
+                  <span className="tw-mx-4 tw-text-red-500">
+                    {Form_Notification.text}
+                  </span>
+                </Form.Text>
+              )}
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Description</Form.Label>
@@ -161,6 +190,7 @@ const Add_Task_Modal_Form = ({
                   required
                   type="text"
                   placeholder="email"
+                  name="assigned_to"
                   onChange={ProjectFieldChangeHandler}
                 />
                 <Form.Text className="text-muted"></Form.Text>
@@ -170,7 +200,7 @@ const Add_Task_Modal_Form = ({
               <Button variant="dark" type="submit">
                 Add
               </Button>
-              <p className="my-auto" onClick={() => setModalFormVisible(false)}>
+              <p className="my-auto tw-cursor-pointer" onClick={() => setModalFormVisible(false)}>
                 Cancel
               </p>
             </div>
