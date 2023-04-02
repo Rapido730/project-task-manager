@@ -16,6 +16,7 @@ import { Task_Action_Type } from "@/Store/Task/Task.Types";
 import Developer_Tasks from "./developer_task.component";
 import { Select_All_Project } from "@/Store/Task/Task.Selector";
 import { Types } from "mongoose";
+import { Task_Type } from "@/DB/models/Task.Model";
 
 const Developer_Body = () => {
   const Dispatch = useDispatch();
@@ -50,7 +51,9 @@ const Developer_Body = () => {
           Dispatch(
             Create_Action(
               Task_Action_Type.Set_Task_Data,
-              Response_Data.filter((task) => task.worker_Id === Selected_User)
+              Response_Data.filter(
+                (task: Task_Type) => task.worker_Id === Selected_User._id
+              )
             )
           );
 

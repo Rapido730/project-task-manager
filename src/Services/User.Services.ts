@@ -1,6 +1,24 @@
 import axios from "axios";
 import { User_Type, User } from "@/DB/models/User.Model";
 
+import { Session } from "next-auth";
+
+export const Get_User_Document = async (data: Session) => {
+  const response = await axios.post(
+    "http://localhost:3000/api/database.api/user.api/create_user.api",
+    {
+      email: data?.user?.email,
+      name: data?.user?.name,
+    }
+  );
+
+  if (response.status === 201) {
+    return { Status: "Success", Response_Data: response.data.user };
+  } else {
+    return { Status: "Error", Response_Data: null };
+  }
+};
+
 export const Update_User = async (user: User_Type) => {
   try {
     const response = await axios.post(

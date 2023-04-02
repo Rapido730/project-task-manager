@@ -15,27 +15,41 @@ import axios from "axios";
 import Manager_Body from "@/component/manager_body.component";
 import Developer_Body from "@/component/developer_body.component";
 import Admin_Body from "@/component/admin_body.component";
+import { Get_User_Document } from "@/Services/User.Services";
 interface Props {
   User: User_Type | undefined;
 }
 
-function Home({ User }: Props) {
+function Home() {
   const { data } = useSession();
   const Dispatch = useDispatch();
 
   const { Current_User } = useSelector((State: State_Type) => State.User);
+
+  useEffect(() => {
+    if (data) {
+      Get_User_Document(data).then((res) => {
+        const { Status, Response_Data } = res;
+        console.log(Response_Data);
+        Dispatch(
+          Create_Action(User_Action_Type.Set_Current_User, Response_Data)
+        );
+        if (Response_Data?.role !== "admin") {
+          Dispatch(Create_Action(User_Action_Type.Select_User, Response_Data));
+        }
+      });
+    }
+  }, [data, Dispatch]);
 
   const signinHandler = (event: any) => {
     signIn();
     Router.push("/dashboard");
   };
 
-  useEffect(() => {
-    Dispatch(Create_Action(User_Action_Type.Set_Current_User, User));
-    if (User?.role !== "admin") {
-      Dispatch(Create_Action(User_Action_Type.Select_User, User));
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   Dispatch(Create_Action(User_Action_Type.Set_Current_User, User));
+
+  // }, [data]);
 
   const Header = dynamic(() => import("../../component/header.component"), {
     ssr: false,
@@ -68,27 +82,27 @@ function Home({ User }: Props) {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  let User = null;
-  try {
-    const data = await getSession(context);
-    console.log(data);
-    const response = await axios.post(
-      "http://localhost:3000/api/database.api/user.api/create_user.api",
-      {
-        email: data?.user?.email,
-        name: data?.user?.name,
-      }
-    );
-    User = response.data.user;
-  } catch {
-    User = null;
-  }
+// export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+//   let User = null;
+//   try {
+//     const data = await getSession(context);
+//     console.log(data);
+//     const response = await axios.post(
+//       "http://localhost:3000/api/database.api/user.api/create_user.api",
+//       {
+//         email: data?.user?.email,
+//         name: data?.user?.name,
+//       }
+//     );
+//     User = response.data.user;
+//   } catch {
+//     User = null;
+//   }
 
-  console.log({ User });
-  return {
-    props: {
-      User: User,
-    },
-  };
-};
+//   console.log({ User });
+//   return {
+//     props: {
+//       User: User,
+//     },
+//   };
+// };

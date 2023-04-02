@@ -337,17 +337,17 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
             <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
               {"Created At "}
             </h1>
-            <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
+            {/* <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
               {Selected_Task?.created_At}
-            </h1>
+            </h1> */}
           </div>
           <div className="tw-flex tw-items-center  tw-shadow-inner">
             <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
               {"Modified At "}
             </h1>
-            <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
+            {/* <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
               {Selected_Task?.updated_At}
-            </h1>
+            </h1> */}
           </div>
         </div>
       </div>
