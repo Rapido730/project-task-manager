@@ -82,6 +82,12 @@ const Add_Project_Modal_Form = ({
             IsOpen: true,
             text: "Project name already exists!",
           });
+          setTimeout(() => {
+            Set_Form_Notification({
+              IsOpen: false,
+              text: "",
+            });
+          }, 3000);
           return;
         }
         const { Status, Response_Data } = await Create_Project(data);

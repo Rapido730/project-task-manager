@@ -167,7 +167,7 @@ const Developer_Tasks = () => {
           </Button>
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className=" tw-grid tw-grid-cols-4 tw-gap-8 tw-mx-10">
+          <div className=" tw-grid tw-grid-cols-4  tw-gap-64 lg:tw-gap-8 tw-mx-10">
             <Droppable droppableId={Task_Status.ToDo}>
               {(provided, snapshot) => (
                 <div

@@ -17,6 +17,7 @@ import Sidebar_Preview from "./sidebar.component";
 import Delete_Icon from "../assests/Delete.svg";
 import { Task_Delete } from "@/Services/Task.Services";
 import Image from "next/image";
+import { Select_Current_User } from "@/Store/User/User.Selector";
 export const Task_Status = {
   ToDo: "ToDo",
   ReworkRequired: "ReworkRequired",
@@ -44,6 +45,10 @@ const Project_Preview = () => {
     review: [],
     inProgress: [],
   });
+
+  const Current_User = useSelector((State: State_Type) =>
+    Select_Current_User(State)
+  );
   const Task_Data = useSelector((state: State_Type) => state.Task.Task_Data);
   console.log({ Task_Data });
   const [ModalFormVisible, SetModalFormVisible] = useState(false);
@@ -117,7 +122,7 @@ const Project_Preview = () => {
   };
 
   const Task_Select_Handler = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
     task: Task_Type
   ) => {
     Dispatch(Create_Action(Task_Action_Type.Select_Task, task));
@@ -213,24 +218,26 @@ const Project_Preview = () => {
 
   return (
     <Fragment>
-      <div className="tw-flex tw-flex-col tw-w-full tw-mx-4">
-        <div className="tw-self-end">
-          <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
-            Create Task
-          </Button>
+      <div className="tw-flex tw-flex-col tw-w-full tw-mx-4 tw-space-y-2">
+        <div className="tw-self-end tw-mt-2">
+          {Current_User?.role !== "admin" && (
+            <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
+              Create Task
+            </Button>
+          )}
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className=" tw-grid tw-grid-cols-4 tw-gap-8">
+          <div className=" tw-grid tw-grid-cols-4  tw-gap-64 lg:tw-gap-8 tw-mx-10 ">
             <Droppable droppableId={Task_Status.ToDo}>
               {(provided, snapshot) => (
                 <div
-                  className={`todoslist ${
+                  className={`todolist tw-p-2 tw-w-64 tw-bg-gray-100 tw-mb-2${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <span className="todos__heading">Todo</span>
+                  <span className="tw-text-2xl">Todo</span>
                   {Tasks?.todo.map((task, index) => (
                     <Draggable
                       key={task.name}
@@ -239,12 +246,13 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem", height: "20rem" }}
+                          style={{ width: "100px", height: "100px" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-mb-4"
+                          className="text-center tw-shadow-lg tw-my-4 tw-h-40 tw-w-56"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
+                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">
@@ -294,13 +302,16 @@ const Project_Preview = () => {
             <Droppable droppableId={Task_Status.InProgress}>
               {(provided, snapshot) => (
                 <div
-                  className={`todoslist ${
+                  className={`todolist tw-p-2 tw-w-64 tw-bg-blue-100 tw-mb-2 ${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <span className="todos__heading">In progress</span>
+                  <span className="tw-text-2xl tw-align-center">
+                    {"In Progress"}
+                  </span>
+
                   {Tasks?.inProgress.map((task, index) => (
                     <Draggable
                       key={task.name}
@@ -309,12 +320,13 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem", height: "20rem" }}
+                          style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-mb-4"
+                          className="text-center tw-opacity-90 tw-shadow-lg tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
+                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">
@@ -364,13 +376,13 @@ const Project_Preview = () => {
             <Droppable droppableId={Task_Status.InReview}>
               {(provided, snapshot) => (
                 <div
-                  className={`todoslist ${
+                  className={`todolist tw-p-2 tw-w-64 tw-bg-red-100 tw-mb-2 ${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <span className="todos__heading">In Review</span>
+                  <span className="tw-text-2xl">In Review</span>
                   {Tasks?.review.map((task, index) => (
                     <Draggable
                       key={task.name}
@@ -379,12 +391,13 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem", height: "20rem" }}
+                          style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-mb-4"
+                          className="text-center tw-shadow-lg tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
+                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">
@@ -434,13 +447,13 @@ const Project_Preview = () => {
             <Droppable droppableId={Task_Status.Completed}>
               {(provided, snapshot) => (
                 <div
-                  className={`todoslist ${
+                  className={`todolist tw-p-2 tw-w-64 tw-bg-green-100  tw-mb-2 ${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <span className="todos__heading">Completed</span>
+                  <span className="tw-text-2xl">Completed</span>
                   {Tasks?.completed.map((task, index) => (
                     <Draggable
                       key={task.name}
@@ -449,12 +462,13 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "18rem", height: "20rem" }}
+                          style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-mb-4"
+                          className="text-center tw-shadow-lg tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
+                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">

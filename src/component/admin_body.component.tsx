@@ -147,7 +147,7 @@ const Admin_Body = () => {
   return (
     <Fragment>
       <div className="tw-flex tw-flex-row tw-h-full">
-        <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
+        <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full ">
           <div className="">
             <Accordion defaultActiveKey="1">
               <Accordion.Item eventKey="0">
@@ -242,7 +242,7 @@ const Admin_Body = () => {
           {Selected_Project ? (
             <Project_Preview />
           ) : Selected_User?.role !== "developer" ? (
-            <div className="tw-grid tw-shadow-inner tw-mx-auto tw-ml-12 tw-p-5 tw-grid-cols-3 tw-gap-12">
+            <div className="tw-grid tw-shadow-inner tw-ml-4 sm:tw-mx-auto tw-ml-12 tw-p-5 tw-grid-cols-1 md:tw-grid-cols-3 md:tw-gap-12">
               {Selected_User && (
                 <Button
                   variant="dark"
