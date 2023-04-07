@@ -9,7 +9,7 @@ export default async function create(
     const data = req.body;
     connectMongoose();
     const new_Project = new Project({
-      name: data.name, 
+      name: data.name,
       description: data.description,
       manager_Id: data.manager_Id,
     });

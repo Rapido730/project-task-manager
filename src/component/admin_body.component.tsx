@@ -22,6 +22,7 @@ import {
   Select_Current_User,
   Select_User_Data,
 } from "@/Store/User/User.Selector";
+import { animated, useTransition } from "@react-spring/web";
 import { State_Type } from "@/Store/Root_Reducer";
 import { Read_Users } from "@/Services/User.Services";
 import Create_Action from "@/Store/Action_Creator";
@@ -32,6 +33,7 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
 import Developer_Tasks from "./developer_task.component";
 import Developer_Body from "./developer_body.component";
 import { Update_User } from "@/Services/User.Services";
+import Manager_Body from "./manager_body.component";
 
 const Admin_Body = () => {
   // console.log({ body: selectedProject });
@@ -48,6 +50,8 @@ const Admin_Body = () => {
   const { Project_Data, Selected_Project } = useSelector(
     (state: State_Type) => state.Project
   );
+
+  const [SideBar_State, Set_Sidebar] = useState(false);
   const [Projects, SetProjects] = useState<Project_Type[]>();
   const [ModalFormVisible, setModalFormVisible] = useState(false);
   const [Template_Preview, set_Template_Preview] = useState(false);
@@ -144,105 +148,151 @@ const Admin_Body = () => {
   const handleCloseOffCanvas = () => setShowOffCanvas(false);
   const handleShowOffCanvas = () => setShowOffCanvas(true);
 
+  const transition = useTransition(SideBar_State, {
+    from: { opacity: 1, width: 100 },
+    enter: { opacity: 1, width: 400 },
+    leave: { opacity: 0, width: 100 },
+  });
+
   return (
     <Fragment>
       <div className="tw-flex tw-flex-row tw-h-full">
-        <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full ">
-          <div className="">
-            <Accordion defaultActiveKey="1">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Users</Accordion.Header>
-                <Accordion.Body>
-                  <Accordion defaultActiveKey="0">
-                    <Accordion.Item eventKey="0">
-                      <Accordion.Header>Managers</Accordion.Header>
-                      <Accordion.Body>
-                        {Users.filter((user) => user.role === "manager").map(
-                          (user) => (
-                            <h1
-                              key={user.email}
-                              className="tw-overflow-auto tw-cursor-pointer tw-text-xl"
-                              onClick={(event) =>
-                                SelectUserHandler(event, user)
-                              }
-                            >
-                              {user.email}
-                            </h1>
-                          )
-                        )}
-                      </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="1">
-                      <Accordion.Header>Developers</Accordion.Header>
-                      <Accordion.Body>
-                        {Users.filter((user) => user.role === "developer").map(
-                          (user) => (
-                            <h1
-                              key={user.email}
-                              // action
-                              // variant="light"
-                              className="tw-overflow-auto tw-cursor-pointer tw-text-xl"
-                              onClick={(event) =>
-                                SelectUserHandler(event, user)
-                              }
-                            >
-                              {user.email}
-                            </h1>
-                          )
-                        )}
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Accordion>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item
-                eventKey="1"
-                onClick={() => {
-                  console.log("open projets");
-                  Dispatch(Create_Action(User_Action_Type.Select_User, null));
-                  get_All_Projects();
-                }}
-              >
-                <Accordion.Header>Projects</Accordion.Header>
-                <Accordion.Body>
-                  <ListGroup>
-                    <ListGroup.Item
-                      key={"8465213896"}
-                      action
-                      variant="light"
-                      className="tw-overflow-auto"
-                      onClick={(event) => {
-                        SelectProjectHandler(event, null);
-                        SelectUserHandler(event, null);
+        <div className="tw-flex-none">
+          {transition((style, item) =>
+            item ? (
+              <animated.div style={{ ...style }} className="  tw-h-full ">
+                <div className="tw-w-full tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full ">
+                  {SideBar_State ? (
+                    <button
+                      className=" tw-w-10 tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
+                      onClick={() => {
+                        Set_Sidebar(false);
                       }}
                     >
-                      {"Show All"}
-                    </ListGroup.Item>
-                    {Projects &&
-                      Project_Data.map((project) => (
-                        <ListGroup.Item
-                          key={project.name}
-                          action
-                          variant="light"
-                          className="tw-overflow-auto"
-                          onClick={(event) =>
-                            SelectProjectHandler(event, project)
-                          }
-                        >
-                          {project.name}
-                        </ListGroup.Item>
-                      ))}
-                  </ListGroup>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </div>
+                      {">>>"}
+                    </button>
+                  ) : (
+                    <div className="tw-h-8"></div>
+                  )}
+                  <div className="tw-mt-4 tw-mr-4">
+                    <Accordion defaultActiveKey="1">
+                      <Accordion.Item eventKey="0">
+                        <Accordion.Header>Users</Accordion.Header>
+                        <Accordion.Body>
+                          <Accordion defaultActiveKey="0">
+                            <Accordion.Item eventKey="0">
+                              <Accordion.Header>Managers</Accordion.Header>
+                              <Accordion.Body>
+                                {Users.filter(
+                                  (user) => user.role === "manager"
+                                ).map((user) => (
+                                  <h1
+                                    key={user.email}
+                                    className="tw-overflow-auto tw-cursor-pointer tw-text-xl"
+                                    onClick={(event) =>
+                                      SelectUserHandler(event, user)
+                                    }
+                                  >
+                                    {user.email}
+                                  </h1>
+                                ))}
+                              </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="1">
+                              <Accordion.Header>Developers</Accordion.Header>
+                              <Accordion.Body>
+                                {Users.filter(
+                                  (user) => user.role === "developer"
+                                ).map((user) => (
+                                  <h1
+                                    key={user.email}
+                                    // action
+                                    // variant="light"
+                                    className="tw-overflow-auto tw-cursor-pointer tw-text-xl"
+                                    onClick={(event) =>
+                                      SelectUserHandler(event, user)
+                                    }
+                                  >
+                                    {user.email}
+                                  </h1>
+                                ))}
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Accordion>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                      <Accordion.Item
+                        eventKey="1"
+                        onClick={() => {
+                          console.log("open projets");
+                          Dispatch(
+                            Create_Action(User_Action_Type.Select_User, null)
+                          );
+                          get_All_Projects();
+                        }}
+                      >
+                        <Accordion.Header>Projects</Accordion.Header>
+                        <Accordion.Body>
+                          <ListGroup>
+                            <ListGroup.Item
+                              key={"8465213896"}
+                              action
+                              variant="light"
+                              className="tw-overflow-auto"
+                              onClick={(event) => {
+                                SelectProjectHandler(event, null);
+                                SelectUserHandler(event, null);
+                              }}
+                            >
+                              {"Show All"}
+                            </ListGroup.Item>
+                            {Projects &&
+                              Project_Data.map((project) => (
+                                <ListGroup.Item
+                                  key={project.name}
+                                  action
+                                  variant="light"
+                                  className="tw-overflow-auto"
+                                  onClick={(event) =>
+                                    SelectProjectHandler(event, project)
+                                  }
+                                >
+                                  {project.name}
+                                </ListGroup.Item>
+                              ))}
+                          </ListGroup>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    </Accordion>
+                  </div>
+                </div>
+              </animated.div>
+            ) : (
+              ""
+            )
+          )}
+
+          {!SideBar_State && (
+            <button
+              className="tw-fixed tw-z-50 tw-left-1 tw-mt-1  tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
+              onClick={() => {
+                Set_Sidebar(true);
+              }}
+            >
+              {">>>"}
+            </button>
+          )}
         </div>
-        <div className="tw-flex">
-          {Selected_Project ? (
-            <Project_Preview />
-          ) : Selected_User?.role !== "developer" ? (
-            <div className="tw-grid tw-shadow-inner tw-ml-4 sm:tw-mx-auto tw-ml-12 tw-p-5 tw-grid-cols-1 md:tw-grid-cols-3 md:tw-gap-12">
+        <div className="tw-flex tw-flex-grow tw-mx-8 tw-my-4">
+          {!Selected_Project && !Selected_User && (
+            <div
+              className={
+                "tw-grid  tw-ml-12  tw-p-5 " +
+                (SideBar_State
+                  ? "tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-8 "
+                  : "tw-ml-12 tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-12 ")
+              }
+            >
               {Selected_User && (
                 <Button
                   variant="dark"
@@ -297,11 +347,11 @@ const Admin_Body = () => {
                   </Card>
                 ))}
             </div>
-          ) : (
-            <div>
-              <Developer_Body />
-            </div>
           )}
+          {Selected_Project && !Selected_User && <Project_Preview />}
+
+          {Selected_User?.role === "developer" && <Developer_Body />}
+          {Selected_User?.role === "manager" && <Manager_Body />}
         </div>
       </div>
 

@@ -19,6 +19,7 @@ import { Types } from "mongoose";
 import { Task_Type } from "@/DB/models/Task.Model";
 import { User_Action_Type } from "@/Store/User/User.Types";
 import { Update_User } from "@/Services/User.Services";
+import { animated, useTransition } from "@react-spring/web";
 
 const Developer_Body = () => {
   const Dispatch = useDispatch();
@@ -38,6 +39,8 @@ const Developer_Body = () => {
   const { Project_Data, Selected_Project } = useSelector(
     (state: State_Type) => state.Project
   );
+
+  const [SideBar_State, Set_Sidebar] = useState(false);
 
   const [Notification_Toast_Show, Set_Notification_Toast_Show] =
     useState(false);
@@ -135,42 +138,95 @@ const Developer_Body = () => {
     SetProjects(Project_Data);
   }, [Project_Data]);
 
+  const transition = useTransition(SideBar_State, {
+    from: { opacity: 1, width: 200 },
+    enter: { opacity: 1, width: 300 },
+    leave: { opacity: 0, width: 200 },
+  });
+
   return (
     <Fragment>
       <div className="tw-flex tw-flex-col tw-h-full">
         {Project_Data.length || Current_User?.role === "admin" ? (
           <div className="tw-flex tw-h-full">
+            {/* { && ( */}
             {Current_User?.role === "developer" && (
-              <div className="tw-w-96 tw-p-1 tw-flex tw-flex-col tw-bg-gray-300 tw-h-full tw-overflow-auto">
-                <ListGroup>
-                  <ListGroup.Item
-                    onClick={(event) => SelectProjectHandler(event, null)}
-                    action
-                    variant="light"
-                    key={"864243"}
-                  >
-                    {"All projects"}
-                  </ListGroup.Item>
-                  {Projects &&
-                    Projects.map((project) => (
-                      <ListGroup.Item
-                        onClick={(event) =>
-                          SelectProjectHandler(event, project)
-                        }
-                        action
-                        variant="light"
-                        key={project.name}
-                      >
-                        {project.name}
-                      </ListGroup.Item>
-                    ))}
-                </ListGroup>
+              <div>
+                {transition((style, item) =>
+                  item ? (
+                    <animated.div style={{ ...style }} className="  tw-h-full ">
+                      <div className="tw-p-1 tw-flex tw-flex-col tw-space-y-4 tw-h-full tw-bg-gray-300 ">
+                        {SideBar_State ? (
+                          <button
+                            className=" tw-w-10 tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
+                            onClick={() => {
+                              Set_Sidebar(false);
+                            }}
+                          >
+                            {">>>"}
+                          </button>
+                        ) : (
+                          <div className="tw-h-8"></div>
+                        )}
+
+                        <ListGroup>
+                          <ListGroup.Item
+                            onClick={(event) =>
+                              SelectProjectHandler(event, null)
+                            }
+                            action
+                            variant="light"
+                            key={"864243"}
+                          >
+                            {"All projects"}
+                          </ListGroup.Item>
+                          {Projects &&
+                            Projects.map((project) => (
+                              <ListGroup.Item
+                                onClick={(event) =>
+                                  SelectProjectHandler(event, project)
+                                }
+                                action
+                                variant="light"
+                                key={project.name}
+                              >
+                                {project.name}
+                              </ListGroup.Item>
+                            ))}
+                          <Button
+                            variant="dark"
+                            onClick={() => SetModalFormVisible(true)}
+                          >
+                            Add Project
+                          </Button>
+                        </ListGroup>
+                      </div>
+                    </animated.div>
+                  ) : (
+                    ""
+                  )
+                )}
               </div>
+            )}
+            {/* )} */}
+            {Current_User?.role === "developer" && !SideBar_State && (
+              <button
+                className="tw-fixed tw-left-1 tw-mt-1  tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
+                onClick={() => {
+                  Set_Sidebar(true);
+                }}
+              >
+                {">>>"}
+              </button>
             )}
             {Selected_Project ? (
               <Developer_Tasks />
             ) : (
-              <div className="tw-grid tw-shadow-inner tw-m-2 tw-p-5 tw-grid-cols-3 tw-gap-8">
+              <div
+                className={
+                  "tw-grid  tw-mx-12 tw-p-5 tw-ml-12 tw-grid-cols-1 md:tw-grid-cols-3 md:tw-gap-4"
+                }
+              >
                 {Current_User?.role === "admin" && (
                   <Button
                     variant="dark"
@@ -188,7 +244,11 @@ const Developer_Body = () => {
                       key={project.name}
                       className="text-center tw-shadow-lg"
                     >
-                      <Card.Header>{project.name}</Card.Header>
+                      <Card.Header>
+                        <h1 className="tw-text-xl tw-font-bold">
+                          {project.name}
+                        </h1>
+                      </Card.Header>
                       <Card.Body>
                         {/* <Card.Title>{project.name}</Card.Title> */}
                         <Card.Text>{project.description}</Card.Text>

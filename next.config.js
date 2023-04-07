@@ -5,7 +5,28 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: "/*",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
+};
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: "/dashboard/*",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
+};
 module.exports = {
   images: {
     domains: [

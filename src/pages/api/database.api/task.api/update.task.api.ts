@@ -6,7 +6,7 @@ export default async function create(
   res: NextApiResponse
 ) {
   try {
-    const fields = ["name", "description", "status"];
+    const fields = ["name", "description", "status", "worker_Id"];
     const data = req.body;
     connectMongoose();
     const task = await Task.findOne({ _id: data._id });

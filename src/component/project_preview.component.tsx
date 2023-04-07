@@ -15,6 +15,7 @@ import Button from "react-bootstrap/Button";
 import Add_Task_Modal_Form from "./add_task_modal.component";
 import Sidebar_Preview from "./sidebar.component";
 import Delete_Icon from "../assests/Delete.svg";
+import Add_Icon from "../assests/Add.svg";
 import { Task_Delete } from "@/Services/Task.Services";
 import Image from "next/image";
 import { Select_Current_User } from "@/Store/User/User.Selector";
@@ -218,26 +219,30 @@ const Project_Preview = () => {
 
   return (
     <Fragment>
-      <div className="tw-flex tw-flex-col tw-w-full tw-mx-4 tw-space-y-2">
-        <div className="tw-self-end tw-mt-2">
-          {Current_User?.role !== "admin" && (
-            <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
-              Create Task
-            </Button>
-          )}
-        </div>
+      <div className="absolute tw-flex tw-w-full tw-flex-col tw-mx-4 tw-space-y-2">
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className=" tw-grid tw-grid-cols-4  tw-gap-64 lg:tw-gap-8 tw-mx-10 ">
+          <div className=" tw-grid tw-grid-cols-4 tw-gap-64 tw-w-full tw-mt-8 lg:tw-gap-8 tw-mx-8 ">
             <Droppable droppableId={Task_Status.ToDo}>
               {(provided, snapshot) => (
                 <div
-                  className={`todolist tw-p-2 tw-w-64 tw-bg-gray-100 tw-mb-2${
+                  className={`todolist tw-p-2 tw-w-64 md:tw-w-84 tw-bg-gray-100 tw-mb-2${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <span className="tw-text-2xl">Todo</span>
+                  <div className="tw-text-2xl tw-flex tw-justify-between tw-border-b-4 tw-border-red-500">
+                    <span>{"Todo"}</span>
+                    <span>
+                      <Image
+                        height={25}
+                        src={Add_Icon}
+                        alt="add"
+                        className="growable clickable"
+                        onClick={() => SetModalFormVisible(true)}
+                      ></Image>
+                    </span>
+                  </div>
                   {Tasks?.todo.map((task, index) => (
                     <Draggable
                       key={task.name}
@@ -246,9 +251,9 @@ const Project_Preview = () => {
                     >
                       {(provided, snapshot) => (
                         <Card
-                          style={{ width: "100px", height: "100px" }}
+                          style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-my-4 tw-h-40 tw-w-56"
+                          className="text-center tw-opacity-90 tw-shadow-lg tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
@@ -302,7 +307,7 @@ const Project_Preview = () => {
             <Droppable droppableId={Task_Status.InProgress}>
               {(provided, snapshot) => (
                 <div
-                  className={`todolist tw-p-2 tw-w-64 tw-bg-blue-100 tw-mb-2 ${
+                  className={`todolist tw-p-2 tw-w-64 md:tw-w-84 tw-bg-blue-100 tw-mb-2 ${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
@@ -376,7 +381,7 @@ const Project_Preview = () => {
             <Droppable droppableId={Task_Status.InReview}>
               {(provided, snapshot) => (
                 <div
-                  className={`todolist tw-p-2 tw-w-64 tw-bg-red-100 tw-mb-2 ${
+                  className={`todolist tw-p-2 tw-w-64 md:tw-w-84 tw-bg-red-100 tw-mb-2 ${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
@@ -447,7 +452,7 @@ const Project_Preview = () => {
             <Droppable droppableId={Task_Status.Completed}>
               {(provided, snapshot) => (
                 <div
-                  className={`todolist tw-p-2 tw-w-64 tw-bg-green-100  tw-mb-2 ${
+                  className={`todolist tw-p-2 tw-w-64 md:tw-w-84 tw-bg-green-100  tw-mb-2 ${
                     snapshot.isDraggingOver ? "dragactive" : ""
                   }`}
                   ref={provided.innerRef}
@@ -530,14 +535,10 @@ const Project_Preview = () => {
         </div>
       )}
 
-      {Task_Preview && (
-        <div className="tw-absolute tw-top-0 tw-right-0 tw-h-full tw-w-6/12">
-          <Sidebar_Preview
-            setModalFormVisible={Set_Task_Preview}
-            Template_Preview={Task_Preview}
-          />
-        </div>
-      )}
+      <Sidebar_Preview
+        setModalFormVisible={Set_Task_Preview}
+        Template_Preview={Task_Preview}
+      />
 
       {ModalFormVisible && (
         <Add_Task_Modal_Form
