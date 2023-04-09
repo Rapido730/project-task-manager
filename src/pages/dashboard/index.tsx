@@ -61,6 +61,14 @@ function Home() {
     setModalFormVisible(true);
   };
 
+  if (!Current_User) {
+    return (
+      <div>
+        <span>You are allowed to access page please login first</span>
+      </div>
+    );
+  }
+
   return (
     <div className="tw-h-screen tw-flex tw-flex-col">
       <div className="tw-flex-none">

@@ -52,8 +52,9 @@ const Header = () => {
         className="tw-font-bold  tw-bg-gradient-to-tl tw-from-gray-900 tw-via-slate-700 tw-to-gray-900"
       >
         <Container fluid className="">
-          <Navbar.Brand href="/">
+          <Navbar.Brand href="/" className="tw-flex tw-space-x-2">
             <FontAwesomeIcon icon={faListAlt} size="2x" />
+            <span className="tw-my-auto">Projectify</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
