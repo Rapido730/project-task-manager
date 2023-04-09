@@ -12,6 +12,7 @@ import { Task_Type } from "@/DB/models/Task.Model";
 import { Card, Button } from "react-bootstrap";
 import Add_Task_Modal_Form from "./add_task_modal.component";
 import Sidebar_Preview from "./sidebar.component";
+import Project_Name from "./project_name.component";
 export const Task_Status = {
   ToDo: "ToDo",
   ReworkRequired: "ReworkRequired",
@@ -40,6 +41,10 @@ const Developer_Tasks = () => {
     state.Task.Task_Data.filter(
       (task) => task.project_Id === state.Project.Selected_Project?._id
     )
+  );
+
+  const Selected_Project = useSelector(
+    (State: State_Type) => State.Project.Selected_Project
   );
   console.log({ Task_Data });
   const [ModalFormVisible, SetModalFormVisible] = useState(false);
@@ -161,10 +166,13 @@ const Developer_Tasks = () => {
   return (
     <Fragment>
       <div className="tw-flex tw-flex-col tw-w-full">
-        <div className="tw-self-end tw-mb-4 tw-mt-1">
-          <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
-            Create Ta
-          </Button>
+        <div className="tw-flex tw-mb-4">
+          <Project_Name />
+          <div className="tw-self-end tw-mb-4 tw-mt-1 tw-mx-1">
+            <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
+              Create Task
+            </Button>
+          </div>
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <div className=" tw-grid tw-grid-cols-4  tw-gap-64 lg:tw-gap-8 tw-mx-10">
@@ -192,7 +200,6 @@ const Developer_Tasks = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>{task.name}</Card.Header>
                           <Card.Body>
@@ -250,7 +257,6 @@ const Developer_Tasks = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>{task.name}</Card.Header>
                           <Card.Body>
@@ -305,7 +311,6 @@ const Developer_Tasks = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>{task.name}</Card.Header>
                           <Card.Body>
@@ -360,7 +365,6 @@ const Developer_Tasks = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>{task.name}</Card.Header>
                           <Card.Body>

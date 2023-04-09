@@ -15,6 +15,7 @@ export default async function create(
       task[field] = data[field];
     });
 
+    task["updated_At"] = new Date();
     task.save();
 
     res.status(200).json({

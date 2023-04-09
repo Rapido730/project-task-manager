@@ -15,6 +15,8 @@ import axios from "axios";
 import Manager_Body from "@/component/manager_body.component";
 import Developer_Body from "@/component/developer_body.component";
 import { Get_User_Document } from "@/Services/User.Services";
+import Image from "next/image";
+import Task_Image from "../assests/home_page1.jpg";
 interface Props {
   User: User_Type | undefined;
 }
@@ -40,7 +42,7 @@ function Home() {
   }, [data, Dispatch]);
 
   const signinHandler = (event: any) => {
-    signIn();
+    if (!Current_User) signIn();
     Router.push("/dashboard");
   };
 
@@ -63,10 +65,22 @@ function Home() {
       <div className="tw-flex-none">
         <Header />
       </div>
-      <div className="tw-flex-grow tw-flex tw-overflow-auto">
-        <h1 className="text-2xl tw-mx-auto tw-my-auto">
-          welcome to task management system
-        </h1>
+      <div className="tw-flex-grow tw-mx-4 tw-py-8 tw-flex tw-flex-col lg:tw-flex-row  lg:tw-space-x-64  tw-overflow-auto">
+        <div>
+          <h1 className="tw-text-7xl tw-w-64 tw-m-4 tw-font-extrabold">
+            Makes Project Management Easy
+          </h1>
+
+          <div
+            className="tw-my-8 clickable border border-dark border-4 tw-w-fit tw-px-2"
+            onClick={signinHandler}
+          >
+            <h1 className=" tw-text-2xl">Get started </h1>
+          </div>
+        </div>
+        <div className="tw-m-4 tw-bg-gray-200 tw-h-fit tw-p-4">
+          <Image src={Task_Image} height={400} alt="Tasks"></Image>
+        </div>
       </div>
       <div></div>
     </div>

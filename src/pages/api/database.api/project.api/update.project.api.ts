@@ -15,6 +15,8 @@ export default async function create(
       Project_Data[field] = data[field];
     });
 
+    Project_Data["updated_At"] = new Date();
+
     Project_Data.save();
     res.status(200).json({
       Project: Project_Data,

@@ -19,6 +19,7 @@ import Add_Icon from "../assests/Add.svg";
 import { Task_Delete } from "@/Services/Task.Services";
 import Image from "next/image";
 import { Select_Current_User } from "@/Store/User/User.Selector";
+import Project_Name from "./project_name.component";
 export const Task_Status = {
   ToDo: "ToDo",
   ReworkRequired: "ReworkRequired",
@@ -220,6 +221,14 @@ const Project_Preview = () => {
   return (
     <Fragment>
       <div className="absolute tw-flex tw-w-full tw-flex-col tw-mx-4 tw-space-y-2">
+        <div className="tw-flex tw-mb-4">
+          <Project_Name />
+          <div className="tw-self-end tw-mb-4 tw-mt-1 tw-mx-1">
+            <Button variant="dark" onClick={() => SetModalFormVisible(true)}>
+              Create Task
+            </Button>
+          </div>
+        </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <div className=" tw-grid tw-grid-cols-4 tw-gap-64 tw-w-full tw-mt-8 lg:tw-gap-8 tw-mx-8 ">
             <Droppable droppableId={Task_Status.ToDo}>
@@ -257,7 +266,6 @@ const Project_Preview = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">
@@ -331,7 +339,6 @@ const Project_Preview = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">
@@ -402,7 +409,6 @@ const Project_Preview = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">
@@ -473,7 +479,6 @@ const Project_Preview = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          onClick={(event) => Task_Select_Handler(event, task)}
                         >
                           <Card.Header>
                             <div className="tw-flex tw-justify-center">

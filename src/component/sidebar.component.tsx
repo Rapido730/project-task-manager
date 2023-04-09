@@ -55,7 +55,9 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
 
   const { Selected_Task } = useSelector((State: State_Type) => State.Task);
   const { Task_Data } = useSelector((State: State_Type) => State.Task);
-  const { User_Data } = useSelector((State: State_Type) => State.User);
+  const { User_Data, Current_User } = useSelector(
+    (State: State_Type) => State.User
+  );
 
   //   console.log({ Selected_Template, Form_Field });
   console.log("render modal");
@@ -88,18 +90,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
       if (Status === "Success") {
         Dispatch(Create_Action(Task_Action_Type.Update_Task, updatedTask));
       } else if (Status == "Database_Error") {
-        // Set_Notification_Data({
-        //   Heading: "Error while updating data",
-        //   Body: "Template data is not updated try again!",
-        // });
-        // Set_Notification_Toast_Show(true);
       } else {
-        // console.log("Aaya");
-        // Set_Notification_Data({
-        //   Heading: "Error in network",
-        //   Body: " try again!",
-        // });
-        // Set_Notification_Toast_Show(true);
       }
     }
   };
@@ -109,6 +100,8 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
     Is_Assign_Edit: false,
     Task_name: "",
     Is_Name_Edit: false,
+    Description: "",
+    Is_Description_Edit: false,
   });
 
   const transition = useTransition(Template_Preview, {
@@ -127,6 +120,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
           ...Selected_Task,
           worker_Id: Edit_Field.Assign_data,
           name: Edit_Field.Task_name,
+          description: Edit_Field.Description,
         };
         console.log({ data });
         const res = Task_Data.filter(
@@ -160,7 +154,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
           return res || false;
         }, false);
 
-        if (!res1) {
+        if (!res1 && Current_User?.role!=="developer") {
           Set_Worker_Error_Notification({
             IsOpen: true,
             text: "Entered user is not a developer",
@@ -173,7 +167,7 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
           }, 3000);
           return;
         }
-        console.log("Ruko")
+        console.log("Ruko");
         const { Status, Response_Data } = await Update_Task(data);
         console.log({ Status, Response_Data });
         if (Status === "Success" && Response_Data) {
@@ -241,6 +235,12 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
         Task_name: value,
       });
     }
+    if (name === "description") {
+      Set_Edit_Field({
+        ...Edit_Field,
+        Description: value,
+      });
+    }
   };
 
   useEffect(() => {
@@ -249,8 +249,10 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
         ...Edit_Field,
         Assign_data: Selected_Task?.worker_Id,
         Task_name: Selected_Task.name,
+        Description: Selected_Task.description,
         Is_Name_Edit: false,
         Is_Assign_Edit: false,
+        Is_Description_Edit: false,
       });
     }
   }, [Selected_Task]);
@@ -386,7 +388,8 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
                         onClick={() => {
                           Set_Edit_Field({
                             ...Edit_Field,
-                            Is_Assign_Edit: true,
+                            Is_Assign_Edit:
+                              Current_User?.role !== "developer" && true,
                           });
                         }}
                       >
@@ -413,15 +416,44 @@ function Sidebar_Preview({ setModalFormVisible, Template_Preview }: Props) {
                       </form>
                     )}
                   </div>
-
                   <div className="tw-flex tw-items-center  tw-shadow-inner">
                     <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
                       {"Description "}
                     </h1>
-                    <h1 className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2">
-                      {Selected_Task?.description}
-                    </h1>
+                    {!Edit_Field.Is_Description_Edit ? (
+                      <h1
+                        className="tw-text-xl tw-flex-grow hover:tw-bg-gray-200 tw-p-2"
+                        onClick={() => {
+                          Set_Edit_Field({
+                            ...Edit_Field,
+                            Is_Description_Edit: true,
+                          });
+                        }}
+                      >
+                        {Selected_Task?.description}
+                      </h1>
+                    ) : (
+                      <form className="tw-flex-grow tw-flex tw-space-x-6 tw-pt-2">
+                        <div className="tw-w-8/12 tw-flex tw-flex-col ">
+                          <input
+                            name="description"
+                            className=""
+                            value={Edit_Field.Description}
+                            onChange={OnEditFieldChangeHandler}
+                          />
+
+                          {Worker_Error_Notification.IsOpen && (
+                            <Form.Text className="text-muted">
+                              <span className="tw-mx-2 tw-text-red-500">
+                                {Worker_Error_Notification.text}
+                              </span>
+                            </Form.Text>
+                          )}
+                        </div>
+                      </form>
+                    )}
                   </div>
+
                   <div className="tw-flex tw-items-center  tw-shadow-inner">
                     <h1 className="tw-text-2xl tw-w-56 hover:tw-bg-gray-200 tw-p-2">
                       {"Created On "}
