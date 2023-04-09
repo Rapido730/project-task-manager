@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useSession, getSession } from "next-auth/react";
 import { State_Type } from "@/Store/Root_Reducer";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import Router from "next/router";
 import Create_Action from "@/Store/Action_Creator";
@@ -63,8 +64,9 @@ function Home() {
 
   if (!Current_User) {
     return (
-      <div>
+      <div className="tw-flex tw-space-x-4">
         <span>You are allowed to access page please login first</span>
+        <Link href="/">Go back to home page</Link>
       </div>
     );
   }
