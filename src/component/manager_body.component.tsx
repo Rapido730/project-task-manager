@@ -18,7 +18,12 @@ import { animated, useTransition } from "@react-spring/web";
 import { Update_User } from "@/Services/User.Services";
 import { User_Action_Type } from "@/Store/User/User.Types";
 import { Read_Users } from "@/Services/User.Services";
-const Manager_Body = () => {
+
+type props = {
+  Parent_Sidebar_State?: boolean;
+};
+
+const Manager_Body = ({ Parent_Sidebar_State }: props) => {
   const Dispatch = useDispatch();
   const { Current_User, Selected_User } = useSelector(
     (state: State_Type) => state.User
@@ -214,9 +219,9 @@ const Manager_Body = () => {
                 (Current_User?.role === "admin"
                   ? "self-end tw-ml-12 tw-gap-16 "
                   : "") +
-                (SideBar_State
+                (SideBar_State || Parent_Sidebar_State
                   ? "tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-8 "
-                  : "tw-ml-12 tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-4 ")
+                  : "tw-ml-12 tw-grid-cols-1 md:tw-grid-cols-4 tw-gap-4 ")
               }
             >
               {Current_User?.role === "admin" && (
@@ -224,9 +229,11 @@ const Manager_Body = () => {
                   variant="dark"
                   style={{ width: "18rem", height: "14rem" }}
                   onClick={() => SetShowUserCanvas(true)}
-                  className="me-2"
+                  className="me-2 tw-flex tw-transition tw-duration-150 tw-ease-in-out hover:tw-scale-105"
                 >
-                  {"Profile"}
+                  <h1 className="tw-text-xl"> {Selected_User?.name}</h1>
+
+                  <h1 className="tw-text-xl"> {Selected_User?.role}</h1>
                 </Button>
               )}
               {Projects &&
@@ -234,7 +241,7 @@ const Manager_Body = () => {
                   <Card
                     style={{ width: "18rem", height: "14rem" }}
                     key={project.name}
-                    className="text-center tw-shadow-lg"
+                    className="tw-transition tw-duration-150 tw-ease-in-out  text-center tw-shadow-lg hover:tw-scale-105"
                   >
                     <Card.Header>
                       <div className="tw-flex tw-justify-center">

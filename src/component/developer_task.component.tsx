@@ -196,7 +196,7 @@ const Developer_Tasks = () => {
                         <Card
                           style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-my-4"
+                          className="text-center tw-opacity-90 tw-shadow-lg tw-transition tw-duration-150 tw-ease-in-out hover:tw-scale-105 tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
@@ -253,7 +253,7 @@ const Developer_Tasks = () => {
                         <Card
                           style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-opacity-90 tw-shadow-lg tw-my-4"
+                          className="text-center tw-opacity-90 tw-shadow-lg tw-transition tw-duration-150 tw-ease-in-out hover:tw-scale-105 tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
@@ -307,7 +307,7 @@ const Developer_Tasks = () => {
                         <Card
                           style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-my-4"
+                          className="text-center tw-opacity-90 tw-shadow-lg tw-transition tw-duration-150 tw-ease-in-out hover:tw-scale-105 tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
@@ -361,7 +361,7 @@ const Developer_Tasks = () => {
                         <Card
                           style={{ width: "18rem" }}
                           key={task.name}
-                          className="text-center tw-shadow-lg tw-my-4"
+                          className="text-center tw-opacity-90 tw-shadow-lg tw-transition tw-duration-150 tw-ease-in-out hover:tw-scale-105 tw-my-4"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}

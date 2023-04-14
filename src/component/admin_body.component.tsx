@@ -293,22 +293,12 @@ const Admin_Body = () => {
                   : "tw-ml-12 tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-12 ")
               }
             >
-              {Selected_User && (
-                <Button
-                  variant="dark"
-                  style={{ width: "18rem", height: "14rem" }}
-                  onClick={() => SetShowUserCanvas(true)}
-                  className="me-2"
-                >
-                  {"Profile"}
-                </Button>
-              )}
               {Projects &&
                 Projects.map((project) => (
                   <Card
                     style={{ width: "18rem", height: "14rem" }}
                     key={project.name}
-                    className="text-center tw-shadow-lg"
+                    className="text-center tw-shadow-lg tw-transition tw-duration-150 tw-ease-in-out hover:tw-scale-105"
                   >
                     <Card.Header>
                       <div className="tw-flex tw-justify-center">
@@ -350,8 +340,12 @@ const Admin_Body = () => {
           )}
           {Selected_Project && !Selected_User && <Project_Preview />}
 
-          {Selected_User?.role === "developer" && <Developer_Body />}
-          {Selected_User?.role === "manager" && <Manager_Body />}
+          {Selected_User?.role === "developer" && (
+            <Developer_Body Parent_Sidebar_State={SideBar_State} />
+          )}
+          {Selected_User?.role === "manager" && (
+            <Manager_Body Parent_Sidebar_State={SideBar_State} />
+          )}
         </div>
       </div>
 
