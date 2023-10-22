@@ -64,6 +64,9 @@ Projectify is a _Project Management System_ which helps manager and employees to
   - Delete a task.
   - Can change the employee working on the task.
   - Edit all attributes of tasks.
+- Change task status with drag and drop feature.
+![](https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_b6811da9c0829d6bd7f8e2068f747d6c.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1697991950&Signature=6yAy9TCYBkf%2BrEZEtpCMWW3%2BtG0%3D)
+
 
 #### As Employee (Developer)
 
