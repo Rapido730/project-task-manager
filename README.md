@@ -37,7 +37,7 @@ Projectify is a _Project Management System_ which helps manager and employees to
 
 - using sign in button at top-right corner user can signin/register for the application.
 
-![](https://hackmd.io/_uploads/HJcaz6zMp.png)
+![](https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_b90f797434b793a210f9f1175f77cd24.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1697991770&Signature=Pa2b35fPgcaxR6pcv2ty9%2FCa%2FAo%3D)
 
 - As you login and head for dashboard.
 
