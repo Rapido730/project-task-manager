@@ -47,7 +47,7 @@ Projectify is a _Project Management System_ which helps manager and employees to
 - It showcase all prject related to the user.
 - Using more button on project we can see all task related to particular project.
 
-![](https://hackmd.io/_uploads/B1S5mpzfp.png)
+![](https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_e5005c43d76a3c1d5d264c82395da46f.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1697991705&Signature=0haMc9rCxMu0SRuUxPpVdykij70%3D)
 
 #### As Manager
 
