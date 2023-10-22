@@ -1,38 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Projectify
 
-## Getting Started
+## Deployed link
 
-First, run the development server:
+- I deployed the project on netlify.
+- [Link](https://project-management-251.netlify.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Description
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Projectify is a _Project Management System_ which helps manager and employees to track task progress of project.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- Developing a Project Management System will help teams work more efficiently, collaborate effectively, and achieve project goals with greater accountability.
+- It simplifies task management, improves team collaboration, and ensures timely project completion, promoting efficiency, transparency, and accountability in workflow.
+- I learned about how to manage RDBMS and fetching proper queries from database.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Skills
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Next.js
+- TypeScript
+- MongoDB
+- Tailwind CSS
+- Redux
+- Bootstrap
+- NextAuth.js
+- mongoose
+- drag and drop
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Installation
 
-## Learn More
+- Clone the repo.
+- Using `npm install` install all dependencies.
+- Start development server `npm run dev`
 
-To learn more about Next.js, take a look at the following resources:
+## Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Home page
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- using sign in button at top-right corner user can signin/register for the application.
 
-## Deploy on Vercel
+![](https://hackmd.io/_uploads/HJcaz6zMp.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- As you login and head for dashboard.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Dashboard
+
+- In this page user can see his/her designation (manager/employee) which assigned by admin.
+- It showcase all prject related to the user.
+- Using more button on project we can see all task related to particular project.
+
+![](https://hackmd.io/_uploads/B1S5mpzfp.png)
+
+#### As Manager
+
+- User can access only project which assigned to them.
+- Has all access to change attributes of project :
+
+  - Can change name of the project.
+  - Delete project.
+  - Create a new project.
+
+- Access regarding task :
+  - Add a new task and assign it to any employee.
+  - Change status of task (Todo/Inprogress/InReview/Completed).
+  - Delete a task.
+  - Can change the employee working on the task.
+  - Edit all attributes of tasks.
+
+#### As Employee (Developer)
+
+- User can access project which related to him/her with atleast one task.
+- And can view only task which are assigned to him/her in that project.
+- User has only view access for the project attributes.
+- Access reagrding task:
+  - Change status of task (Todo/Inprogress/InReview/Completed).
+
+## Features
+
+- Authentication
+- Project Mangement
+- Drag and drop feature to change status of task.
+- Mutliple role
