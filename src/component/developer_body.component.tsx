@@ -228,7 +228,7 @@ const Developer_Body = ({ Parent_Sidebar_State }: props) => {
             ) : (
               <div
                 className={
-                  "tw-grid  tw-mx-12 tw-p-5 tw-ml-12  " +
+                  "tw-grid  tw-mx-12 tw-p-5 tw-ml-12 " +
                   (SideBar_State || Parent_Sidebar_State
                     ? "tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-8 "
                     : "tw-ml-12 tw-grid-cols-1 md:tw-grid-cols-4 tw-gap-4 ")

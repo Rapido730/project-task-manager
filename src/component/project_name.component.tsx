@@ -128,8 +128,8 @@ const Project_Name = () => {
               controlId="exampleForm.ControlInput1"
             >
               <Form.Control
-                type="email"
-                placeholder="name@example.com"
+                type="text"
+                placeholder="project name"
                 value={Form_Field}
                 onChange={onChangeHandler}
               />
