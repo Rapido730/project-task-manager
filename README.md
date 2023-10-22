@@ -15,15 +15,12 @@ Projectify is a _Project Management System_ which helps manager and employees to
 
 ## Skills
 
-- Next.js
-- TypeScript
-- MongoDB
-- Tailwind CSS
-- Redux
-- Bootstrap
-- NextAuth.js
-- mongoose
-- drag and drop
+- ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+- ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+- ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+- ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+- ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+- ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 
 ## Installation
 
@@ -65,8 +62,7 @@ Projectify is a _Project Management System_ which helps manager and employees to
   - Can change the employee working on the task.
   - Edit all attributes of tasks.
 - Change task status with drag and drop feature.
-![](https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_b6811da9c0829d6bd7f8e2068f747d6c.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1697991950&Signature=6yAy9TCYBkf%2BrEZEtpCMWW3%2BtG0%3D)
-
+  ![](https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_b6811da9c0829d6bd7f8e2068f747d6c.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1697991950&Signature=6yAy9TCYBkf%2BrEZEtpCMWW3%2BtG0%3D)
 
 #### As Employee (Developer)
 
